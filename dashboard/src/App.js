@@ -1,25 +1,47 @@
+import { Router } from "@reach/router";
+import Overview from "./front/Overview";
+import SignUp from "./front/SignUp";
+import { Link } from "@reach/router"
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import { makeStyles } from '@material-ui/core/styles';
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Home from './front/Home';
+import {Paper} from "@material-ui/core";
+
+const useStyles = makeStyles({
+    root: {
+        flexGrow: 1,
+    },
+});
+
 
 function App() {
+    const classes = useStyles();
+    const [value, setValue] = React.useState(0);
+
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <div>
+          <Paper className={classes.root}>
+          <Tabs value={value}
+                onChange={handleChange}
+                indicatorColor="primary"
+                textColor="primary"
+                centered>
+              <Tab label={'Home'} component={Link} to={'/'} />
+              <Tab label={'Overview'} component={Link} to={'/overview'}/>
+              <Tab label={'Sign Up'} component={Link} to={'/signup'}/>
+          </Tabs>
+          </Paper>
+          <Router>
+              <Home path={'/'}/>
+              <Overview path={'/overview'}/>
+              <SignUp path={'/signup'}/>
+          </Router>
+      </div>
   );
 }
 
