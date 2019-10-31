@@ -26,19 +26,13 @@ function App() {
   return (
       <div>
           <Paper className={classes.root}>
-          <Tabs value={value}
-                onChange={handleChange}
-                indicatorColor="primary"
-                textColor="primary"
-                centered>
-              <Tab label={'Home'} component={Link} to={'/'} />
-              <Tab label={'Overview'} component={Link} to={'/overview'}/>
-              <Tab label={'Sign Up'} component={Link} to={'/signup'}/>
-          </Tabs>
+              <Tabs value={value} onChange={handleChange} indicatorColor="primary" textColor="primary" centered>
+                  <Tab label={'Home'} component={Link} to={'/'}/>
+                  <Tab label={'Sign Up'} component={Link} to={'/signup'}/>
+              </Tabs>
           </Paper>
           <Router>
               <Home path={'/'}/>
-              <Overview path={'/overview'}/>
               <SignUp path={'/signup'}/>
           </Router>
       </div>
