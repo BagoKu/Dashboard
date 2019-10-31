@@ -1,5 +1,4 @@
 import { Router } from "@reach/router";
-import Overview from "./front/Overview";
 import SignUp from "./front/SignUp";
 import { Link } from "@reach/router"
 import Tabs from "@material-ui/core/Tabs";
@@ -27,7 +26,7 @@ function App() {
       <div>
           <Paper className={classes.root}>
               <Tabs value={value} onChange={handleChange} indicatorColor="primary" textColor="primary" centered>
-                  <Tab label={'Home'} component={Link} to={'/'}/>
+                  <Tab label={'Sign In'} component={Link} to={'/'}/>
                   <Tab label={'Sign Up'} component={Link} to={'/signup'}/>
               </Tabs>
           </Paper>
