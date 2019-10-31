@@ -4,11 +4,11 @@ import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
-import AssignmentIcon from '@material-ui/icons/Assignment';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import {Link} from "@reach/router";
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import { Link } from "@reach/router"
 
 const useStyles = makeStyles(theme => ({
     '@global': {
@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-function SignUpTab(props) {
+function SignInTab(props) {
     const { value, index } = props;
     const classes = useStyles();
     return (
@@ -43,29 +43,16 @@ function SignUpTab(props) {
             <CssBaseline/>
             <div className={classes.paper}>
                 <Avatar className={classes.avatar}>
-                    <AssignmentIcon/>
+                    <LockOutlinedIcon/>
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                    Sign Up
+                    Sign in
                 </Typography>
                 <form className={classes.form} noValidate>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <TextField
-                                autoComplete="uname"
-                                name="userName"
                                 variant="outlined"
-                                required
-                                fullWidth
-                                id="UserName"
-                                label="Name"
-                                autoFocus
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                variant="outlined"
-                                required
                                 fullWidth
                                 id="email"
                                 label="Email Address"
@@ -76,7 +63,6 @@ function SignUpTab(props) {
                         <Grid item xs={12}>
                             <TextField
                                 variant="outlined"
-                                required
                                 fullWidth
                                 name="password"
                                 label="Password"
@@ -93,7 +79,7 @@ function SignUpTab(props) {
                         color="primary"
                         className={classes.submit}
                         component={Link} to={'/dashboard'}>
-                        Sign Up
+                        Sign in
                     </Button>
                 </form>
             </div>
@@ -101,4 +87,4 @@ function SignUpTab(props) {
     );
 }
 
-export default SignUpTab
+export default SignInTab

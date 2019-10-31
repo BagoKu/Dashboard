@@ -1,38 +1,14 @@
 import { Router } from "@reach/router";
-import SignUp from "./front/SignUp";
-import { Link } from "@reach/router"
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import { makeStyles } from '@material-ui/core/styles';
 import React from 'react';
-import Home from './front/Home';
-import {Paper} from "@material-ui/core";
-
-const useStyles = makeStyles({
-    root: {
-        flexGrow: 1,
-    },
-});
-
+import Dashboard from "./front/Dashboard";
+import Home from "./front/Home";
 
 function App() {
-    const classes = useStyles();
-    const [value, setValue] = React.useState(0);
-
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    };
   return (
       <div>
-          <Paper className={classes.root}>
-              <Tabs value={value} onChange={handleChange} indicatorColor="primary" textColor="primary" centered>
-                  <Tab label={'Sign In'} component={Link} to={'/'}/>
-                  <Tab label={'Sign Up'} component={Link} to={'/signup'}/>
-              </Tabs>
-          </Paper>
           <Router>
               <Home path={'/'}/>
-              <SignUp path={'/signup'}/>
+              <Dashboard path={'/dashboard'}/>
           </Router>
       </div>
   );
