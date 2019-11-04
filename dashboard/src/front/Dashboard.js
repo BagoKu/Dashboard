@@ -7,7 +7,6 @@ import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
@@ -17,8 +16,35 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
+import AddIcon from '@material-ui/icons/Add';
+import Fab from '@material-ui/core/Fab';
+import {Modal} from "@material-ui/core";
+import Fade from '@material-ui/core/Fade';
+import Backdrop from '@material-ui/core/Backdrop';
+import TextField from "@material-ui/core/TextField";
+import MenuItem from "@material-ui/core/MenuItem";
+import Button from "@material-ui/core/Button";
+import Paper from "@material-ui/core/Paper";
 
 const drawerWidth = 240;
+
+const widgets = [
+    {
+        name: 'Messenger',
+    },
+    {
+        name: 'Instagram',
+    },
+    {
+        name: 'Twitter',
+    },
+    {
+        name: 'Outlook',
+    },
+    {
+        name: 'GitHub',
+    },
+];
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -78,20 +104,57 @@ const useStyles = makeStyles(theme => ({
     content: {
         flexGrow: 1,
         padding: theme.spacing(3),
+        backgroundColor: 'steelblue',
+    },
+    addButton: {
+        position: 'absolute',
+        bottom: theme.spacing(4),
+        right: theme.spacing(4),
+    },
+    paper: {
+        position: 'absolute',
+        width: 400,
+        backgroundColor: theme.palette.background.paper,
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing(2, 4, 3),
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    modal: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    menu: {
+        width: 200,
     },
 }));
 
 function Dashboard() {
     const classes = useStyles();
     const theme = useTheme();
-    const [open, setOpen] = React.useState(false);
+    const [openDrawer, setOpenDrawer] = React.useState(false);
+    const [openModal, setOpenModal] = React.useState(false);
+    const [widgetToAdd, setWidgetToAdd] = React.useState('Add a new widget !');
 
     const handleDrawerOpen = () => {
-        setOpen(true);
+        setOpenDrawer(true);
     };
 
     const handleDrawerClose = () => {
-        setOpen(false);
+        setOpenDrawer(false);
+    };
+
+    const handleModalOpen = () => {
+        setOpenModal(true);
+    };
+
+    const handleModalClose = () => {
+        setOpenModal(false);
+    };
+
+    const handleChange = event => {
+        setWidgetToAdd(event.target.value)
     };
 
     return (
@@ -100,7 +163,7 @@ function Dashboard() {
             <AppBar
                 position="fixed"
                 className={clsx(classes.appBar, {
-                    [classes.appBarShift]: open,
+                    [classes.appBarShift]: openDrawer,
                 })}
             >
                 <Toolbar>
@@ -110,7 +173,7 @@ function Dashboard() {
                         onClick={handleDrawerOpen}
                         edge="start"
                         className={clsx(classes.menuButton, {
-                            [classes.hide]: open,
+                            [classes.hide]: openDrawer,
                         })}
                     >
                         <MenuIcon />
@@ -123,16 +186,16 @@ function Dashboard() {
             <Drawer
                 variant="permanent"
                 className={clsx(classes.drawer, {
-                    [classes.drawerOpen]: open,
-                    [classes.drawerClose]: !open,
+                    [classes.drawerOpen]: openDrawer,
+                    [classes.drawerClose]: !openDrawer,
                 })}
                 classes={{
                     paper: clsx({
-                        [classes.drawerOpen]: open,
-                        [classes.drawerClose]: !open,
+                        [classes.drawerOpen]: openDrawer,
+                        [classes.drawerClose]: !openDrawer,
                     }),
                 }}
-                open={open}
+                open={openDrawer}
             >
                 <div className={classes.toolbar}>
                     <IconButton onClick={handleDrawerClose}>
@@ -149,11 +212,47 @@ function Dashboard() {
                 </List>
             </Drawer>
             <main className={classes.content}>
-                <div className={classes.toolbar} />
-                <Typography paragraph>
-                    Dashboard
-                </Typography>
+                <div className={classes.toolbar}/>
             </main>
+            <div>
+                <Fab className={classes.addButton} onClick={handleModalOpen}>
+                    <AddIcon/>
+                </Fab>
+                <Modal className={classes.modal}
+                       open={openModal}
+                       onClose={handleModalClose}
+                       closeAfterTransition
+                       BackdropComponent={Backdrop}
+                       BackdropProps={{
+                           timeout: 500,
+                       }}
+                >
+                    <Fade in={openModal}>
+                        <Paper className={classes.paper}>
+                            <TextField  select
+                                        value={widgetToAdd}
+                                        onChange={handleChange}
+                                        SelectProps={{
+                                           MenuProps: {
+                                               className: classes.menu,
+                                           },
+                                        }}
+                                        helperText="Please select the new widget to add"
+                                        margin={"normal"}
+                            >
+                                {widgets.map(widget => (
+                                    <MenuItem key={widget.name} value={widget.name}>
+                                        {widget.name}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
+                            <Button onClick={handleModalClose}>
+                                OK
+                            </Button>
+                        </Paper>
+                    </Fade>
+                </Modal>
+            </div>
         </div>
     );
 }
