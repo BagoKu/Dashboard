@@ -9,6 +9,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { Link } from "@reach/router"
+import user from "./../back/ConnectToApi";
 
 const useStyles = makeStyles(theme => ({
     '@global': {
@@ -73,12 +74,13 @@ function SignInTab(props) {
                         </Grid>
                     </Grid>
                     <Button
+                        onClick={function(event) {event.preventDefault(); user.findUser("", "")}}
                         type="submit"
                         fullWidth
                         variant="contained"
                         color="primary"
                         className={classes.submit}
-                        component={Link} to={'/dashboard'}>
+                        >
                         Sign in
                     </Button>
                 </form>

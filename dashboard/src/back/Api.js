@@ -5,6 +5,7 @@ var mongoose = require('mongoose');
 var hostname = 'localhost'
 var port = 3002
 
+
 var options = { server: { socketOptions: { keepAlice: 300000, connectTimeoutMS: 30000}},
     replset: {socketOptions: {keepAlive: 300000, connectTimeoutMS: 30000}}};
 
@@ -16,17 +17,15 @@ var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Error in connection'));
 db.once('open', function() {
     console.log("Connection ok");
-})
+});
 
-var app = express()
+var app = express();
 
 var myRouter = express.Router();
 
 var userSchema = mongoose.Schema({
     name: String,
-    surname: String,
     email: String,
-    username: String,
     password: String
 })
 
@@ -45,9 +44,7 @@ myRouter.route('/')
         var user = new User();
 
         user.name = req.body.name;
-        user.surname = req.body.surname;
         user.email = req.body.email;
-        user.username = req.body.email;
         user.password = req.body.password;
         user.save(function(err) {
             if(err) {
@@ -63,6 +60,11 @@ myRouter.route('/')
 
     });
 
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(myRouter);

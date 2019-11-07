@@ -4,16 +4,14 @@ var request = require('request');
 
 const data = JSON.stringify({
     name: "Joe",
-    surname: "Lapine",
     email: "joelapine@gmail.com",
-    username: "joejoe",
     password: "michel"
 })
 
 
 const options = {
     hostname: 'localhost',
-    port: 3000,
+    port: 3002,
     path: '/',
     method: 'POST',
     headers: {
