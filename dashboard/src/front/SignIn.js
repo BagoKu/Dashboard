@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -39,6 +39,24 @@ const useStyles = makeStyles(theme => ({
 function SignInTab(props) {
     const { value, index } = props;
     const classes = useStyles();
+    const [email, getEmail] = useState('');
+    const [password, getPassword] = useState('');
+    const [connect, setConnect] = useState("/");
+
+    const handleClick= (event) => {
+        event.preventDefault();
+        user.findUser(email, password)
+            .then((result) => {
+                if (result !== "ko") {
+                    setConnect("/dashboard");
+                } else
+                    setConnect("/");
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+
     return (
         <Container component={'div'} hidden={value !== index} id={`tabpanel-${index}`} maxWidth="xs">
             <CssBaseline/>
@@ -53,16 +71,19 @@ function SignInTab(props) {
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <TextField
+                                onChange={event => getEmail(event.target.value)}
                                 variant="outlined"
                                 fullWidth
                                 id="email"
                                 label="Email Address"
                                 name="email"
                                 autoComplete="email"
+                                value={email}
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
+                                onChange={event => getPassword(event.target.value)}
                                 variant="outlined"
                                 fullWidth
                                 name="password"
@@ -70,17 +91,18 @@ function SignInTab(props) {
                                 type="password"
                                 id="password"
                                 autoComplete="current-password"
+                                value={password}
                             />
                         </Grid>
                     </Grid>
                     <Button
-                        onClick={function(event) {event.preventDefault(); user.findUser("", "")}}
+                        onClick={(event)=> handleClick(event)}
                         type="submit"
                         fullWidth
                         variant="contained"
                         color="primary"
                         className={classes.submit}
-                        >
+                        component={Link} to={connect}>
                         Sign in
                     </Button>
                 </form>
