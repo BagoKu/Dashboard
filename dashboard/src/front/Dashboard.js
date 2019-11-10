@@ -14,8 +14,6 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
 import {Modal} from "@material-ui/core";
@@ -25,8 +23,17 @@ import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
+import Divider from "@material-ui/core/Divider";
+import HomeIcon from "@material-ui/icons/Home";
 
 const drawerWidth = 240;
+
+const spaces = [
+    {
+        title: 'Home',
+        icon: <HomeIcon/>,
+    },
+];
 
 const widgets = [
     {
@@ -114,11 +121,10 @@ const useStyles = makeStyles(theme => ({
     paper: {
         position: 'absolute',
         width: 400,
+        height: 100,
         backgroundColor: theme.palette.background.paper,
         boxShadow: theme.shadows[5],
         padding: theme.spacing(2, 4, 3),
-        alignItems: 'center',
-        justifyContent: 'center',
     },
     modal: {
         display: 'flex',
@@ -127,6 +133,16 @@ const useStyles = makeStyles(theme => ({
     },
     menu: {
         width: 200,
+    },
+    selection: {
+        top: 5,
+        left: 20,
+    },
+    button: {
+        backgroundColor: '#3f51b5',
+        color: 'white',
+        top: 20,
+        left: 35,
     },
 }));
 
@@ -154,7 +170,7 @@ function Dashboard() {
     };
 
     const handleChange = event => {
-        setWidgetToAdd(event.target.value)
+        setWidgetToAdd(event.target.value);
     };
 
     return (
@@ -203,12 +219,19 @@ function Dashboard() {
                     </IconButton>
                 </div>
                 <List>
-                    {['Inbox', 'Starred'].map((text, index) => (
-                        <ListItem button key={text}>
-                            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                            <ListItemText primary={text} />
+                    {spaces.map(space => (
+                        <ListItem button key={space.title}>
+                            <ListItemIcon>{space.icon}</ListItemIcon>
+                            <ListItemText primary={space.title}/>
                         </ListItem>
                     ))}
+                </List>
+                <Divider/>
+                <List>
+                    <ListItem button key={'Add'}>
+                        <ListItemIcon><AddIcon/></ListItemIcon>
+                        <ListItemText primary={'Add new dashboard'}/>
+                    </ListItem>
                 </List>
             </Drawer>
             <main className={classes.content}>
@@ -229,7 +252,8 @@ function Dashboard() {
                 >
                     <Fade in={openModal}>
                         <Paper className={classes.paper}>
-                            <TextField  select
+                            <TextField  className={classes.selection}
+                                        select
                                         value={widgetToAdd}
                                         onChange={handleChange}
                                         SelectProps={{
@@ -246,7 +270,7 @@ function Dashboard() {
                                     </MenuItem>
                                 ))}
                             </TextField>
-                            <Button onClick={handleModalClose}>
+                            <Button className={classes.button} onClick={function(event) {handleModalClose(); alert('Widget created');}}>
                                 OK
                             </Button>
                         </Paper>
