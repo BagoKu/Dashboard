@@ -41,21 +41,17 @@ function SignInTab(props) {
     const classes = useStyles();
     const [email, getEmail] = useState('');
     const [password, getPassword] = useState('');
-    const [connect, setConnect] = useState("/");
+    var connect  = '/'
 
-    const handleClick= (event) => {
-        event.preventDefault();
-        user.findUser(email, password)
-            .then((result) => {
-                if (result !== "ko") {
-                    setConnect("/dashboard");
-                } else
-                    setConnect("/");
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-    }
+    const handleClick= async (event) => {
+        var res = await user.findUser(email, password);
+        if (res === "ko") {
+            window.location = '/'
+        } else {
+            window.location = '/dashboard';
+        }
+    };
+
 
     return (
         <Container component={'div'} hidden={value !== index} id={`tabpanel-${index}`} maxWidth="xs">
