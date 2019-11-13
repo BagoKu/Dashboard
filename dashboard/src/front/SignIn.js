@@ -10,6 +10,7 @@ import Container from '@material-ui/core/Container';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { Link } from "@reach/router"
 import user from "./../back/ConnectToApi";
+import Cookies from 'js-cookie';
 
 const useStyles = makeStyles(theme => ({
     '@global': {
@@ -46,8 +47,9 @@ function SignInTab(props) {
     const handleClick= async (event) => {
         var res = await user.findUser(email, password);
         if (res === "ko") {
-            window.location = '/'
+            alert("user not found")
         } else {
+            Cookies.set('username', res);
             window.location = '/dashboard';
         }
     };

@@ -25,6 +25,7 @@ import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
 import Divider from "@material-ui/core/Divider";
 import HomeIcon from "@material-ui/icons/Home";
+import Cookies from 'js-cookie';
 
 const drawerWidth = 240;
 
@@ -152,6 +153,11 @@ function Dashboard() {
     const [openDrawer, setOpenDrawer] = React.useState(false);
     const [openModal, setOpenModal] = React.useState(false);
     const [widgetToAdd, setWidgetToAdd] = React.useState('Add a new widget !');
+
+    const getUsername = () => {
+      const username = Cookies.get('username');
+      console.log(username);
+    };
 
     const handleDrawerOpen = () => {
         setOpenDrawer(true);
