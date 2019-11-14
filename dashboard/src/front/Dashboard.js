@@ -1,5 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
+import {FaFacebookMessenger} from 'react-icons/fa';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
@@ -25,13 +26,30 @@ import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
 import Divider from "@material-ui/core/Divider";
 import HomeIcon from "@material-ui/icons/Home";
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import WorkIcon from '@material-ui/icons/Work';
+import ShareIcon from '@material-ui/icons/Share';
+import Card from "@material-ui/core/Card";
+import CardHeader from "@material-ui/core/CardHeader";
+import CardMedia from "@material-ui/core/CardMedia";
+import CardContent from "@material-ui/core/CardContent";
+import CardActions from "@material-ui/core/CardActions";
+import Container from "@material-ui/core/Container";
+import Box from "@material-ui/core/Box";
+import Menu from "@material-ui/core/Menu";
+import Select from "@material-ui/core/Select";
 
 const drawerWidth = 240;
 
-const spaces = [
+const spacesIcon = [
     {
-        title: 'Home',
-        icon: <HomeIcon/>,
+        icon: <HomeIcon/>
+    },
+    {
+        icon: <WorkIcon/>
+    },
+    {
+        icon: <ShareIcon/>
     },
 ];
 
@@ -111,7 +129,7 @@ const useStyles = makeStyles(theme => ({
     content: {
         flexGrow: 1,
         padding: theme.spacing(3),
-        backgroundColor: 'steelblue',
+        flexDirection: 'row',
     },
     addButton: {
         position: 'absolute',
@@ -144,6 +162,13 @@ const useStyles = makeStyles(theme => ({
         top: 20,
         left: 35,
     },
+    card: {
+        maxWidth: 345,
+    },
+    servicesDisplay: {
+        padding: theme.spacing(3),
+        backgroundColor: 'steelblue',
+    },
 }));
 
 function Dashboard() {
@@ -151,7 +176,16 @@ function Dashboard() {
     const theme = useTheme();
     const [openDrawer, setOpenDrawer] = React.useState(false);
     const [openModal, setOpenModal] = React.useState(false);
-    const [widgetToAdd, setWidgetToAdd] = React.useState('Add a new widget !');
+    const [openSpaceModal, setOpenSpaceModal] = React.useState(false);
+    const [spaceToAdd, setSpaceToAdd] = React.useState(null);
+    const [widgetToAdd, setWidgetToAdd] = React.useState('');
+    const [userSpaces, setUserSpaces] = React.useState(['Home']);
+    const [userWidgets, setUserWidgets] = React.useState([]);
+    const [dashboardName, setDashBoardName] = React.useState('');
+
+    const handleDashboardName = (event) => {
+        setDashBoardName(event.target.value);
+    };
 
     const handleDrawerOpen = () => {
         setOpenDrawer(true);
@@ -169,8 +203,37 @@ function Dashboard() {
         setOpenModal(false);
     };
 
+    const handleSpaceModalOpen = () => {
+        setOpenSpaceModal(true);
+    };
+
+    const handleSpaceModalClose = () => {
+        setOpenSpaceModal(false);
+    };
+
+    const handleSpaceToAdd = event => {
+        setSpaceToAdd(event.target.value);
+    };
+
+    const handleSpaceToAddClose = () => {
+        setSpaceToAdd(null);
+    };
+
     const handleChange = event => {
         setWidgetToAdd(event.target.value);
+    };
+
+    const addUserSpace = (spaceToAdd) => {
+        setUserSpaces(userSpaces.concat([spaceToAdd]));
+    };
+
+    const addUserWidget = (widgetToAdd) => {
+        setUserWidgets(userWidgets.concat([widgetToAdd]));
+    };
+
+    const closeDashboardModal = () => {
+        handleSpaceModalClose();
+        addUserSpace(document.getElementById("dashboard-name").value);
     };
 
     return (
@@ -219,23 +282,70 @@ function Dashboard() {
                     </IconButton>
                 </div>
                 <List>
-                    {spaces.map(space => (
-                        <ListItem button key={space.title}>
-                            <ListItemIcon>{space.icon}</ListItemIcon>
-                            <ListItemText primary={space.title}/>
+                    {userSpaces.map(space => (
+                        <ListItem button key={space}>
+                            <ListItemIcon><HomeIcon/></ListItemIcon>
+                            <ListItemText primary={space}/>
                         </ListItem>
                     ))}
                 </List>
                 <Divider/>
                 <List>
-                    <ListItem button key={'Add'}>
+                    <ListItem button onClick={function() {handleSpaceModalOpen()}}>
                         <ListItemIcon><AddIcon/></ListItemIcon>
                         <ListItemText primary={'Add new dashboard'}/>
                     </ListItem>
                 </List>
+                <div>
+                    <Modal className={classes.modal}
+                           open={openSpaceModal}
+                           onClose={() => handleSpaceModalClose}
+                           closeAfterTransition
+                           BackdropComponent={Backdrop}
+                           BackdropProps={{
+                               timeout: 500,
+                           }}
+                    >
+                        <Fade in={openSpaceModal}>
+                            <Paper className={classes.paper}>
+                                <Select
+                                    onChange={handleSpaceToAdd}
+                                >
+                                    {spacesIcon.map(space => (
+                                        <MenuItem key={space.icon} value={space.icon}>
+                                            {space.icon}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                                <TextField id={'dashboard-name'} label="Name of the dashboard" margin="normal"/>
+                                <Button onClick={() => closeDashboardModal()}>
+                                    OK
+                                </Button>
+                            </Paper>
+                        </Fade>
+                    </Modal>
+                </div>
             </Drawer>
             <main className={classes.content}>
                 <div className={classes.toolbar}/>
+                <Container>
+                    <Box display={'flex'} flexDirection={'row'}>
+                        {userWidgets.map(item => (
+                            <Card style={{margin: 10}}>
+                                <CardHeader avatar={<FaFacebookMessenger/>} title={item}/>
+                                <CardMedia/>
+                                <CardContent>
+                                    <Typography>{item}</Typography>
+                                </CardContent>
+                                <CardActions>
+                                    <IconButton>
+                                        <FavoriteIcon/>
+                                    </IconButton>
+                                </CardActions>
+                            </Card>
+                        ))}
+                    </Box>
+                </Container>
             </main>
             <div>
                 <Fab className={classes.addButton} onClick={handleModalOpen}>
@@ -270,7 +380,7 @@ function Dashboard() {
                                     </MenuItem>
                                 ))}
                             </TextField>
-                            <Button className={classes.button} onClick={function(event) {handleModalClose(); alert('Widget created');}}>
+                            <Button className={classes.button} onClick={function(event) {handleModalClose(); addUserWidget(widgetToAdd); alert('Widget added');}}>
                                 OK
                             </Button>
                         </Paper>
