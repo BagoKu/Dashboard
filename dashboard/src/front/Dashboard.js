@@ -26,6 +26,7 @@ import Paper from "@material-ui/core/Paper";
 import Divider from "@material-ui/core/Divider";
 import HomeIcon from "@material-ui/icons/Home";
 import Cookies from 'js-cookie';
+import findWeather from "../back/ConnectToOtherApi";
 
 const drawerWidth = 240;
 
@@ -276,7 +277,7 @@ function Dashboard() {
                                     </MenuItem>
                                 ))}
                             </TextField>
-                            <Button className={classes.button} onClick={function(event) {handleModalClose(); alert('Widget created');}}>
+                            <Button className={classes.button} onClick={function(event) {handleModalClose(); findWeather("Lille"); alert('Widget created');}}>
                                 OK
                             </Button>
                         </Paper>
