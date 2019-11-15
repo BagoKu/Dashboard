@@ -179,7 +179,7 @@ function Dashboard() {
     const [openSpaceModal, setOpenSpaceModal] = React.useState(false);
     const [spaceToAdd, setSpaceToAdd] = React.useState(null);
     const [widgetToAdd, setWidgetToAdd] = React.useState('');
-    const [userSpaces, setUserSpaces] = React.useState(['Home']);
+    const [userSpaces, setUserSpaces] = React.useState([{name: 'Home', icon: <HomeIcon/>}]);
     const [userWidgets, setUserWidgets] = React.useState([]);
     const [dashboardName, setDashBoardName] = React.useState('');
 
@@ -223,17 +223,17 @@ function Dashboard() {
         setWidgetToAdd(event.target.value);
     };
 
-    const addUserSpace = (spaceToAdd) => {
-        setUserSpaces(userSpaces.concat([spaceToAdd]));
+    const addUserSpace = (Name, Icon) => {
+        setUserSpaces(userSpaces.concat([{name: Name, icon: Icon}]));
     };
 
     const addUserWidget = (widgetToAdd) => {
         setUserWidgets(userWidgets.concat([widgetToAdd]));
     };
 
-    const closeDashboardModal = () => {
+    const closeDashboardModal = (iconToAdd) => {
         handleSpaceModalClose();
-        addUserSpace(document.getElementById("dashboard-name").value);
+        addUserSpace(document.getElementById("dashboard-name").value, iconToAdd);
     };
 
     return (
@@ -283,9 +283,9 @@ function Dashboard() {
                 </div>
                 <List>
                     {userSpaces.map(space => (
-                        <ListItem button key={space}>
-                            <ListItemIcon><HomeIcon/></ListItemIcon>
-                            <ListItemText primary={space}/>
+                        <ListItem button key={space.name}>
+                            <ListItemIcon>{space.icon}</ListItemIcon>
+                            <ListItemText primary={space.name}/>
                         </ListItem>
                     ))}
                 </List>
@@ -309,6 +309,8 @@ function Dashboard() {
                         <Fade in={openSpaceModal}>
                             <Paper className={classes.paper}>
                                 <Select
+                                    id={'dashboard-icon'}
+                                    value={spaceToAdd}
                                     onChange={handleSpaceToAdd}
                                 >
                                     {spacesIcon.map(space => (
@@ -318,7 +320,7 @@ function Dashboard() {
                                     ))}
                                 </Select>
                                 <TextField id={'dashboard-name'} label="Name of the dashboard" margin="normal"/>
-                                <Button onClick={() => closeDashboardModal()}>
+                                <Button onClick={() => closeDashboardModal(spaceToAdd)}>
                                     OK
                                 </Button>
                             </Paper>
