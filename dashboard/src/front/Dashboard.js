@@ -40,6 +40,7 @@ import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
 import Menu from "@material-ui/core/Menu";
 import Select from "@material-ui/core/Select";
+import apis from './../back/ConnectToOtherApi'
 
 const drawerWidth = 240;
 
@@ -342,8 +343,8 @@ function Dashboard() {
                 <div className={classes.toolbar}/>
                 <Container>
                     <Box display={'flex'} flexDirection={'row'}>
-                        {userWidgets.map(item => (
-                            <Card style={{margin: 10}}>
+                        {userWidgets.map((item, index) => (
+                            <Card key={index} style={{margin: 10}}>
                                 <CardHeader avatar={<FaFacebookMessenger/>} title={item}/>
                                 <CardMedia/>
                                 <CardContent>
@@ -386,13 +387,13 @@ function Dashboard() {
                                         helperText="Please select the new widget to add"
                                         margin={"normal"}
                             >
-                                {widgets.map(widget => (
-                                    <MenuItem key={widget.name} value={widget.name}>
+                                {widgets.map((widget, index) => (
+                                    <MenuItem key={index} value={widget.name}>
                                         {widget.name}
                                     </MenuItem>
                                 ))}
                             </TextField>
-                            <Button className={classes.button} onClick={function(event) {handleModalClose(); findWeather("Lille"); addUserWidget(widgetToAdd); alert('Widget added');}}>
+                            <Button className={classes.button} onClick={function(event) {handleModalClose(); apis.requestTwitch('Juyinsama'); addUserWidget(widgetToAdd); alert('Widget added');}}>
                                 OK
                             </Button>
                         </Paper>
