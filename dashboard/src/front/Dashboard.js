@@ -179,7 +179,17 @@ function Dashboard() {
     const [spaceToAdd, setSpaceToAdd] = React.useState(null);
     const [widgetToAdd, setWidgetToAdd] = React.useState('');
     const [userDashboards, setuserDashboards] = React.useState([{name: 'Home', icon: <HomeIcon/>}]);
-    const [userWidgets, setUserWidgets] = React.useState([]);
+    const [userWidgets, setUserWidgets] = React.useState([{name: 'Home', widgets: []}]);
+    const [currentDashboardName, setCurrentDashboardName] = React.useState('Home');
+    const [currentWidgetsToDisplay, setCurrentWidgetsToDisplay] = React.useState([]);
+
+    const handleCurrentWidgetsToDisplay = (widgets) => {
+        setCurrentWidgetsToDisplay(widgets);
+    };
+
+    const handleCurrentDashboardName = (name) => {
+        setCurrentDashboardName(name);
+    };
 
     const handleDrawerOpen = () => {
         setOpenDrawer(true);
@@ -215,10 +225,17 @@ function Dashboard() {
 
     const addUserSpace = (Name, Icon) => {
         setuserDashboards(userDashboards.concat([{name: Name, icon: Icon}]));
+        setUserWidgets(userWidgets.concat([{name: Name, widgets: []}]))
     };
 
-    const addUserWidget = (widgetToAdd) => {
-        setUserWidgets(userWidgets.concat([widgetToAdd]));
+    const addUserWidget = (dashboardName, widgetToAdd) => {
+        for (let i = 0; i < userWidgets.length; i++) {
+            if (userWidgets[i].name === dashboardName) {
+                setUserWidgets(userWidgets[i].widgets.push([widgetToAdd]));
+                alert(userWidgets[i].widgets);
+                handleCurrentWidgetsToDisplay(userWidgets[i].widgets);
+            }
+        }
     };
 
     const closeDashboardModal = (iconToAdd) => {
@@ -226,8 +243,8 @@ function Dashboard() {
         addUserSpace(document.getElementById("dashboard-name").value, iconToAdd);
     };
 
-    const handle = (item) => {
-        alert(item)
+    const handle = (dashboardName) => {
+        handleCurrentDashboardName(dashboardName);
     };
 
     return (
@@ -252,7 +269,7 @@ function Dashboard() {
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" noWrap>
-                        Dashboard
+                        Dashboard: {currentDashboardName}
                     </Typography>
                 </Toolbar>
             </AppBar>
@@ -277,7 +294,7 @@ function Dashboard() {
                 </div>
                 <List>
                     {userDashboards.map(space => (
-                        <ListItem button onClick={function() {handle('hello')}}>
+                        <ListItem button onClick={function() {handle(space.name)}}>
                             <ListItemIcon>{space.icon}</ListItemIcon>
                             <ListItemText primary={space.name}/>
                         </ListItem>
@@ -326,7 +343,7 @@ function Dashboard() {
                 <div className={classes.toolbar}/>
                 <Container>
                     <Box display={'flex'} flexDirection={'row'}>
-                        {userWidgets.map(item => (
+                        {currentWidgetsToDisplay.map(item => (
                             <Card style={{margin: 10}}>
                                 <CardHeader avatar={<FaFacebookMessenger/>} title={item}/>
                                 <CardMedia/>
@@ -376,7 +393,7 @@ function Dashboard() {
                                     </MenuItem>
                                 ))}
                             </TextField>
-                            <Button className={classes.button} onClick={function(event) {handleModalClose(); addUserWidget(widgetToAdd); alert('Widget added');}}>
+                            <Button className={classes.button} onClick={function(event) {handleModalClose(); addUserWidget(currentDashboardName, widgetToAdd); alert('Widget added');}}>
                                 OK
                             </Button>
                         </Paper>
