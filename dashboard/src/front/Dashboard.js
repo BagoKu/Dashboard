@@ -36,7 +36,6 @@ import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
-import Menu from "@material-ui/core/Menu";
 import Select from "@material-ui/core/Select";
 
 const drawerWidth = 240;
@@ -179,13 +178,8 @@ function Dashboard() {
     const [openSpaceModal, setOpenSpaceModal] = React.useState(false);
     const [spaceToAdd, setSpaceToAdd] = React.useState(null);
     const [widgetToAdd, setWidgetToAdd] = React.useState('');
-    const [userSpaces, setUserSpaces] = React.useState([{name: 'Home', icon: <HomeIcon/>}]);
+    const [userDashboards, setuserDashboards] = React.useState([{name: 'Home', icon: <HomeIcon/>}]);
     const [userWidgets, setUserWidgets] = React.useState([]);
-    const [dashboardName, setDashBoardName] = React.useState('');
-
-    const handleDashboardName = (event) => {
-        setDashBoardName(event.target.value);
-    };
 
     const handleDrawerOpen = () => {
         setOpenDrawer(true);
@@ -215,16 +209,12 @@ function Dashboard() {
         setSpaceToAdd(event.target.value);
     };
 
-    const handleSpaceToAddClose = () => {
-        setSpaceToAdd(null);
-    };
-
     const handleChange = event => {
         setWidgetToAdd(event.target.value);
     };
 
     const addUserSpace = (Name, Icon) => {
-        setUserSpaces(userSpaces.concat([{name: Name, icon: Icon}]));
+        setuserDashboards(userDashboards.concat([{name: Name, icon: Icon}]));
     };
 
     const addUserWidget = (widgetToAdd) => {
@@ -234,6 +224,10 @@ function Dashboard() {
     const closeDashboardModal = (iconToAdd) => {
         handleSpaceModalClose();
         addUserSpace(document.getElementById("dashboard-name").value, iconToAdd);
+    };
+
+    const handle = (item) => {
+        alert(item)
     };
 
     return (
@@ -282,8 +276,8 @@ function Dashboard() {
                     </IconButton>
                 </div>
                 <List>
-                    {userSpaces.map(space => (
-                        <ListItem button key={space.name}>
+                    {userDashboards.map(space => (
+                        <ListItem button onClick={function() {handle('hello')}}>
                             <ListItemIcon>{space.icon}</ListItemIcon>
                             <ListItemText primary={space.name}/>
                         </ListItem>
