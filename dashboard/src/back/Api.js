@@ -1,15 +1,16 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var cors = require('cors');
 
 var hostname = 'localhost'
-var port = 3002
+var port = 8800
 
 
 var options = { server: { socketOptions: { keepAlice: 300000, connectTimeoutMS: 30000}},
     replset: {socketOptions: {keepAlive: 300000, connectTimeoutMS: 30000}}};
 
-var urlmongo = "mongodb://localhost:27017/mydb";
+var urlmongo = "mongodb://mongo:27017/mydb";
 
 mongoose.connect(urlmongo, options);
 
@@ -59,7 +60,7 @@ myRouter.route('/')
     .delete(function(req, res) {
 
     });
-
+app.use(cors());
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
