@@ -1,9 +1,8 @@
 version: '3.7'
-
 services:
-
   sample:
     container_name: sample
+    restart: always
     build:
       context: .
       dockerfile: Dockerfile
