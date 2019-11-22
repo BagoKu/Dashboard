@@ -3,7 +3,7 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var cors = require('cors');
 
-var hostname = 'localhost'
+/*var hostname = 'localhost'*/
 var port = 8800
 
 
@@ -21,6 +21,8 @@ db.once('open', function() {
 });
 
 var app = express();
+
+app.use(cors());
 
 var myRouter = express.Router();
 
@@ -60,7 +62,6 @@ myRouter.route('/')
     .delete(function(req, res) {
 
     });
-app.use(cors());
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -72,6 +73,7 @@ app.use(myRouter);
 
 module.exports = User;
 
-app.listen(port, hostname, function() {
+/*app.listen(port, hostname, function() {
     console.log("mon serveur fonctionne sur http://" + hostname + ":" + port + "\n");
-});
+});*/
+app.listen(port, () => console.log("mon serveur est sur le port : " + port));
