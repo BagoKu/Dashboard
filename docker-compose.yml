@@ -15,10 +15,12 @@ services:
       - NODE_ENV=development
 
   mongo:
-      container_name: mongo
-      image: mongo
-      ports:
-        - "27017:27017"
+    container_name: mongo
+    image: mongo
+    ports:
+      - "27017:27017"
+    expose:
+      - "27017"
 
   back:
     container_name: back
