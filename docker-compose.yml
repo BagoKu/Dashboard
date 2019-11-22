@@ -1,0 +1,39 @@
+version: '3.7'
+services:
+  front:
+    container_name: front
+    build:
+      context: ./dashboard/src/front
+      dockerfile: Dockerfile
+    volumes:
+      - './dashboard/src/front:/front'
+    ports:
+      - '8080:3000'
+    depends_on:
+      - back
+    environment:
+      - NODE_ENV=development
+
+  mongo:
+    container_name: mongo
+    image: mongo
+    ports:
+      - "27017:27017"
+    expose:
+      - "27017"
+
+  back:
+    container_name: back
+    build:
+      context: ./dashboard/src/back
+      dockerfile: Dockerfile
+    volumes:
+      - './dashboard/src/back:/back'
+    ports:
+      - '8800:8800'
+    links:
+      - mongo
+    depends_on:
+      - mongo
+    environment:
+      - NODE_ENV=development
