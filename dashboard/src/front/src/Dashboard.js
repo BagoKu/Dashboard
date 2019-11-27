@@ -26,19 +26,17 @@ import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
 import Divider from "@material-ui/core/Divider";
 import HomeIcon from "@material-ui/icons/Home";
-import Cookies from 'js-cookie';
+/*import Cookies from 'js-cookie';*/
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import WorkIcon from '@material-ui/icons/Work';
 import ShareIcon from '@material-ui/icons/Share';
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
-import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
 import Select from "@material-ui/core/Select";
-import apis from './ConnectToOtherApi'
 
 const drawerWidth = 240;
 
@@ -176,12 +174,13 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function Dashboard() {
+
     const classes = useStyles();
     const theme = useTheme();
     const [openDrawer, setOpenDrawer] = React.useState(false);
     const [openModal, setOpenModal] = React.useState(false);
     const [openSpaceModal, setOpenSpaceModal] = React.useState(false);
-    const [spaceToAdd, setSpaceToAdd] = React.useState(null);
+    const [spaceToAdd, setSpaceToAdd] = React.useState('');
     const [widgetToAdd, setWidgetToAdd] = React.useState('');
     const [userDashboards, setuserDashboards] = React.useState([{name: 'Home', icon: <HomeIcon/>}]);
     const [userWidgets, setUserWidgets] = React.useState([{name: 'Home', widgets: []}]);
@@ -195,11 +194,12 @@ function Dashboard() {
     const handleCurrentDashboardName = (name) => {
         setCurrentDashboardName(name);
     };
-
+/*
     const getUsername = () => {
       const username = Cookies.get('username');
       console.log(username);
     };
+    */
 
     const handleDrawerOpen = () => {
         setOpenDrawer(true);
@@ -235,14 +235,27 @@ function Dashboard() {
 
     const addUserSpace = (Name, Icon) => {
         setuserDashboards(userDashboards.concat([{name: Name, icon: Icon}]));
-        setUserWidgets(userWidgets.concat([{name: Name, widgets: []}]))
+        setUserWidgets(userWidgets.concat([{name: Name, widgets: []}]));
+    };
+
+    const addWidgetToDashboard = (name, dashboard, widgetToAdd, index) => {
+
+        let tmpArray = userWidgets;
+        let tmpObject = {name: name, widgets: dashboard.widgets};
+
+        tmpObject.widgets.push(widgetToAdd);
+        tmpArray[index] = tmpObject;
+        setUserWidgets(tmpArray);
+        console.log("Result: " + JSON.stringify(userWidgets));
     };
 
     const addUserWidget = (dashboardName, widgetToAdd) => {
-        for (let i = 0; i < userWidgets.length; i++) {
+
+        let i = 0;
+
+        for (; i < userWidgets.length; i++) {
             if (userWidgets[i].name === dashboardName) {
-                setUserWidgets(userWidgets[i].widgets.push([widgetToAdd]));
-                alert(userWidgets[i].widgets);
+                addWidgetToDashboard(dashboardName, userWidgets[i], widgetToAdd, i);
                 handleCurrentWidgetsToDisplay(userWidgets[i].widgets);
             }
         }
@@ -255,6 +268,13 @@ function Dashboard() {
 
     const handle = (dashboardName) => {
         handleCurrentDashboardName(dashboardName);
+        let i = 0;
+
+        for (; i < userWidgets.length; i++) {
+            if (userWidgets[i].name === dashboardName) {
+                handleCurrentWidgetsToDisplay(userWidgets[i].widgets);
+            }
+        }
     };
 
     return (
@@ -299,12 +319,12 @@ function Dashboard() {
             >
                 <div className={classes.toolbar}>
                     <IconButton onClick={handleDrawerClose}>
-                        {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+                        {theme.direction === 'rtl' ? <ChevronRightIcon/> : <ChevronLeftIcon/>}
                     </IconButton>
                 </div>
                 <List>
-                    {userDashboards.map(space => (
-                        <ListItem button onClick={function() {handle(space.name)}}>
+                    {userDashboards.map((space, index) => (
+                        <ListItem key={`section-${index}`} button onClick={function() {handle(space.name)}}>
                             <ListItemIcon>{space.icon}</ListItemIcon>
                             <ListItemText primary={space.name}/>
                         </ListItem>
@@ -334,8 +354,8 @@ function Dashboard() {
                                     value={spaceToAdd}
                                     onChange={handleSpaceToAdd}
                                 >
-                                    {spacesIcon.map(space => (
-                                        <MenuItem key={space.icon} value={space.icon}>
+                                    {spacesIcon.map((space, index) => (
+                                        <MenuItem key={`dashboardIcon-${index}`} value={space.icon}>
                                             {space.icon}
                                         </MenuItem>
                                     ))}
@@ -353,10 +373,9 @@ function Dashboard() {
                 <div className={classes.toolbar}/>
                 <Container>
                     <Box display={'flex'} flexDirection={'row'}>
-                        {currentWidgetsToDisplay.map(item => (
-                            <Card style={{margin: 10}}>
+                        {currentWidgetsToDisplay.map((item, index) => (
+                            <Card key={`cards-${index}`} style={{margin: 10}}>
                                 <CardHeader avatar={<FaFacebookMessenger/>} title={item}/>
-                                <CardMedia/>
                                 <CardContent>
                                     <Typography>{item}</Typography>
                                 </CardContent>
@@ -398,12 +417,12 @@ function Dashboard() {
                                         margin={"normal"}
                             >
                                 {widgets.map((widget, index) => (
-                                    <MenuItem key={index} value={widget.name}>
+                                    <MenuItem key={`widgets-${index}`} value={widget.name}>
                                         {widget.name}
                                     </MenuItem>
                                 ))}
                             </TextField>
-                            <Button className={classes.button} onClick={function(event) {handleModalClose(); addUserWidget(currentDashboardName, widgetToAdd); alert('Widget added');}}>
+                            <Button className={classes.button} onClick={function(event) {handleModalClose(); addUserWidget(currentDashboardName, widgetToAdd);}}>
                                 OK
                             </Button>
                         </Paper>
