@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import {FaFacebookMessenger} from 'react-icons/fa';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -16,7 +16,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove'
+import RemoveIcon from '@material-ui/icons/Remove';
 import Fab from '@material-ui/core/Fab';
 import {Modal} from "@material-ui/core";
 import Fade from '@material-ui/core/Fade';
@@ -27,18 +27,20 @@ import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
 import Divider from "@material-ui/core/Divider";
 import HomeIcon from "@material-ui/icons/Home";
-/*import Cookies from 'js-cookie';*/
+import Cookies from 'js-cookie';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import WorkIcon from '@material-ui/icons/Work';
 import ShareIcon from '@material-ui/icons/Share';
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
+import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
 import Select from "@material-ui/core/Select";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import apis from './ConnectToOtherApi'
 
 const drawerWidth = 240;
 
@@ -63,7 +65,7 @@ const widgets = [
     },
     {
         name: 'Twitch',
-    },
+    }
 ];
 
 const useStyles = makeStyles(theme => ({
@@ -181,19 +183,17 @@ function Dashboard() {
     const [currentWidgetsToDisplay, setCurrentWidgetsToDisplay] = React.useState([]);
 
     const handleCurrentWidgetsToDisplay = (widgets) => {
-        console.log(JSON.stringify(userWidgets));
         setCurrentWidgetsToDisplay(widgets);
     };
 
     const handleCurrentDashboardName = (name) => {
         setCurrentDashboardName(name);
     };
-/*
+
     const getUsername = () => {
       const username = Cookies.get('username');
       console.log(username);
     };
-    */
 
     const handleDrawerOpen = () => {
         setOpenDrawer(true);

@@ -1,7 +1,6 @@
 import axios from 'axios';
 var https = require('http');
-/*var request = require('request');*/
-
+var request = require('request');
 
 function addUser(_username, _email, _password) {
     const data = JSON.stringify({
@@ -27,20 +26,20 @@ function addUser(_username, _email, _password) {
         res.on('data', (d) => {
             process.stdout.write(d)
         })
-    });
+    })
 
     req.on('error', (error) => {
         console.error(error)
-    });
+    })
 
-    req.write(data);
+    req.write(data)
     req.end()
 
 }
 
 async function findUser(_email, _password) {
     console.log("test2");
-    await axios.get(`http://localhost:8800`)
+    const response = await axios.get(`http://localhost:8800`)
         .then(res => {
             console.log("test");
             for (var i = 0; res.data[i] != null; i++) {
@@ -53,7 +52,7 @@ async function findUser(_email, _password) {
             }
             return("ko");
         })
-        .catch(error => console.log(error));
+        .catch(error => console.log(error))
     return("ko");
 }
 
