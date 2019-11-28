@@ -1,6 +1,5 @@
 import React from 'react';
 import clsx from 'clsx';
-import {FaFacebookMessenger} from 'react-icons/fa';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
@@ -39,6 +38,7 @@ import Select from "@material-ui/core/Select";
 import WbSunnyRoundedIcon from '@material-ui/icons/WbSunnyRounded';
 import PlayCircleOutlineRoundedIcon from '@material-ui/icons/PlayCircleOutlineRounded';
 import LiveTvRoundedIcon from '@material-ui/icons/LiveTvRounded';
+import user from "./ConnectToApi";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import apis from './ConnectToOtherApi'
 
@@ -209,8 +209,8 @@ function Dashboard() {
     };
 
     const getUsername = () => {
-      const username = Cookies.get('username');
-      console.log(username);
+      const _id = Cookies.get('_id');
+      console.log(_id);
     };
 
     const handleDrawerOpen = () => {
@@ -248,6 +248,8 @@ function Dashboard() {
     const addUserSpace = (Name, Icon) => {
         setuserDashboards(userDashboards.concat([{name: Name, icon: Icon}]));
         setUserWidgets(userWidgets.concat([{name: Name, widgets: []}]));
+        var email = Cookies.get('_email');
+        user.addDashboard(email, Name, Icon)
     };
 
     const addWidgetToDashboard = (name, dashboard, widgetToAdd, index) => {
@@ -270,6 +272,7 @@ function Dashboard() {
                 handleCurrentWidgetsToDisplay(userWidgets[i].widgets);
             }
         }
+        user.addWidget(Cookies.get('_email'), dashboardName, widgetToAdd, "jcp encore");
     };
 
     const closeDashboardModal = (iconToAdd) => {

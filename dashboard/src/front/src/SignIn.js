@@ -49,7 +49,7 @@ function SignInTab(props) {
         if (res === "ko") {
             alert("user not found")
         } else {
-            Cookies.set('username', res);
+            Cookies.set('_email', res);
             window.location = '/dashboard';
         }
     };
