@@ -272,19 +272,22 @@ function Dashboard() {
 
     const removeDashboard = (dashboardName) => {
 
-        let tmpArray = userWidgets;
+        console.log("test");
+        let tmpArray = [...userDashboards];
         let arrayLen = tmpArray.length;
         let i = 0;
 
-        for (; i < userWidgets.length; i++) {
-            if (userWidgets[i].name === dashboardName) {
+        for (; i < userDashboards.length; i++) {
+            if (userDashboards[i].name === dashboardName) {
+                /*
                 console.log(dashboardName);
                 console.log(JSON.stringify(tmpArray));
                 console.log(JSON.stringify(tmpArray.slice(0, i).concat(tmpArray.slice(i + 1, arrayLen))));
                 console.log(JSON.stringify(tmpArray.filter(item => item.name !== dashboardName)));
                 handleCurrentWidgetsToDisplay(userWidgets[0].widgets);
                 handleCurrentDashboardName(dashboardName);
-                setUserWidgets(userWidgets.filter(item => item.name !== dashboardName));
+                */
+                setuserDashboards(tmpArray.filter(item => item.name !== dashboardName));
                 break;
             }
         }
@@ -340,7 +343,7 @@ function Dashboard() {
                         <ListItem key={`section-${index}`} button onClick={function() {handle(space.name)}}>
                             <ListItemIcon>{space.icon}</ListItemIcon>
                             <ListItemText primary={space.name}/>
-                            {space.name !== "Home" && <IconButton><RemoveIcon/></IconButton>}
+                            {space.name !== "Home" && <ListItemSecondaryAction><IconButton onClick={() => removeDashboard(space.name)} ><RemoveIcon/></IconButton></ListItemSecondaryAction>}
                         </ListItem>
                     ))}
                 </List>
