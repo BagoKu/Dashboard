@@ -25,7 +25,7 @@ async function addUser(_username, _email, _password) {
             'Content-Type': 'application/json',
             'Content-Length': data.length
         }
-    }
+    };
 
     const req = https.request(options, (res) => {
         console.log(`statusCode: ${res.statusCode}`);
@@ -148,6 +148,6 @@ async function findUser(_email, _password) {
 
 const user = {
     addUser, findUser, addDashboard, addWidget
-}
+};
 
 export default user;

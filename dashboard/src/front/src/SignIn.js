@@ -42,7 +42,7 @@ function SignInTab(props) {
     const classes = useStyles();
     const [email, getEmail] = useState('');
     const [password, getPassword] = useState('');
-    var connect  = '/'
+    var connect  = '/';
 
     const handleClick= async (event) => {
         var res = await user.findUser(email, password);

@@ -16,6 +16,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
 import Fab from '@material-ui/core/Fab';
 import {Modal} from "@material-ui/core";
 import Fade from '@material-ui/core/Fade';
@@ -39,6 +40,7 @@ import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
 import Select from "@material-ui/core/Select";
 import user from "./ConnectToApi";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import apis from './ConnectToOtherApi'
 
 const drawerWidth = 240;
@@ -57,23 +59,14 @@ const spacesIcon = [
 
 const widgets = [
     {
-        name: 'Messenger',
-    },
-    {
-        name: 'Instagram',
-    },
-    {
-        name: 'Twitter',
-    },
-    {
-        name: 'Outlook',
-    },
-    {
-        name: 'GitHub',
-    },
-    {
         name: 'Weather',
     },
+    {
+        name: 'Youtube',
+    },
+    {
+        name: 'Twitch',
+    }
 ];
 
 const useStyles = makeStyles(theme => ({
@@ -177,12 +170,13 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function Dashboard() {
+
     const classes = useStyles();
     const theme = useTheme();
     const [openDrawer, setOpenDrawer] = React.useState(false);
     const [openModal, setOpenModal] = React.useState(false);
     const [openSpaceModal, setOpenSpaceModal] = React.useState(false);
-    const [spaceToAdd, setSpaceToAdd] = React.useState(null);
+    const [spaceToAdd, setSpaceToAdd] = React.useState('');
     const [widgetToAdd, setWidgetToAdd] = React.useState('');
     const [userDashboards, setuserDashboards] = React.useState([{name: 'Home', icon: <HomeIcon/>}]);
     const [userWidgets, setUserWidgets] = React.useState([{name: 'Home', widgets: []}]);
@@ -241,11 +235,23 @@ function Dashboard() {
         user.addDashboard(email, Name, Icon)
     };
 
+    const addWidgetToDashboard = (name, dashboard, widgetToAdd, index) => {
+
+        let tmpArray = userWidgets;
+        let tmpObject = {name: name, widgets: dashboard.widgets};
+
+        tmpObject.widgets.push(widgetToAdd);
+        tmpArray[index] = tmpObject;
+        setUserWidgets(tmpArray);
+    };
+
     const addUserWidget = (dashboardName, widgetToAdd) => {
-        for (let i = 0; i < userWidgets.length; i++) {
+
+        let i = 0;
+
+        for (; i < userWidgets.length; i++) {
             if (userWidgets[i].name === dashboardName) {
-                setUserWidgets(userWidgets[i].widgets.push([widgetToAdd]));
-                alert(userWidgets[i].widgets);
+                addWidgetToDashboard(dashboardName, userWidgets[i], widgetToAdd, i);
                 handleCurrentWidgetsToDisplay(userWidgets[i].widgets);
             }
         }
@@ -259,6 +265,33 @@ function Dashboard() {
 
     const handle = (dashboardName) => {
         handleCurrentDashboardName(dashboardName);
+        let i = 0;
+
+        for (; i < userWidgets.length; i++) {
+            if (userWidgets[i].name === dashboardName) {
+                handleCurrentWidgetsToDisplay(userWidgets[i].widgets);
+            }
+        }
+    };
+
+    const removeDashboard = (dashboardName) => {
+
+        let tmpArray = userWidgets;
+        let arrayLen = tmpArray.length;
+        let i = 0;
+
+        for (; i < userWidgets.length; i++) {
+            if (userWidgets[i].name === dashboardName) {
+                console.log(dashboardName);
+                console.log(JSON.stringify(tmpArray));
+                console.log(JSON.stringify(tmpArray.slice(0, i).concat(tmpArray.slice(i + 1, arrayLen))));
+                console.log(JSON.stringify(tmpArray.filter(item => item.name !== dashboardName)));
+                handleCurrentWidgetsToDisplay(userWidgets[0].widgets);
+                handleCurrentDashboardName(dashboardName);
+                setUserWidgets(userWidgets.filter(item => item.name !== dashboardName));
+                break;
+            }
+        }
     };
 
     return (
@@ -303,14 +336,15 @@ function Dashboard() {
             >
                 <div className={classes.toolbar}>
                     <IconButton onClick={handleDrawerClose}>
-                        {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+                        {theme.direction === 'rtl' ? <ChevronRightIcon/> : <ChevronLeftIcon/>}
                     </IconButton>
                 </div>
                 <List>
-                    {userDashboards.map(space => (
-                        <ListItem button onClick={function() {handle(space.name)}}>
+                    {userDashboards.map((space, index) => (
+                        <ListItem key={`section-${index}`} button onClick={function() {handle(space.name)}}>
                             <ListItemIcon>{space.icon}</ListItemIcon>
                             <ListItemText primary={space.name}/>
+                            {space.name !== "Home" && <IconButton><RemoveIcon/></IconButton>}
                         </ListItem>
                     ))}
                 </List>
@@ -338,8 +372,8 @@ function Dashboard() {
                                     value={spaceToAdd}
                                     onChange={handleSpaceToAdd}
                                 >
-                                    {spacesIcon.map(space => (
-                                        <MenuItem key={space.icon} value={space.icon}>
+                                    {spacesIcon.map((space, index) => (
+                                        <MenuItem key={`dashboardIcon-${index}`} value={space.icon}>
                                             {space.icon}
                                         </MenuItem>
                                     ))}
@@ -357,10 +391,9 @@ function Dashboard() {
                 <div className={classes.toolbar}/>
                 <Container>
                     <Box display={'flex'} flexDirection={'row'}>
-                        {currentWidgetsToDisplay.map(item => (
-                            <Card style={{margin: 10}}>
+                        {currentWidgetsToDisplay.map((item, index) => (
+                            <Card key={`cards-${index}`} style={{margin: 10}}>
                                 <CardHeader avatar={<FaFacebookMessenger/>} title={item}/>
-                                <CardMedia/>
                                 <CardContent>
                                     <Typography>{item}</Typography>
                                 </CardContent>
@@ -402,12 +435,12 @@ function Dashboard() {
                                         margin={"normal"}
                             >
                                 {widgets.map((widget, index) => (
-                                    <MenuItem key={index} value={widget.name}>
+                                    <MenuItem key={`widgets-${index}`} value={widget.name}>
                                         {widget.name}
                                     </MenuItem>
                                 ))}
                             </TextField>
-                            <Button className={classes.button} onClick={function(event) {handleModalClose(); addUserWidget(currentDashboardName, widgetToAdd); alert('Widget added');}}>
+                            <Button className={classes.button} onClick={function(event) {handleModalClose(); addUserWidget(currentDashboardName, widgetToAdd);}}>
                                 OK
                             </Button>
                         </Paper>

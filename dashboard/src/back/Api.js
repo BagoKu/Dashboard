@@ -95,7 +95,7 @@ myRouter.route('/')
                 usr.dashboards.push(req.body.dashboards)
             }
             if (usr && req.body.widgets) {
-                usr.findOne({dashboards.name: req.body.dashName}, function (err, dash) {
+                usr.findOne({dashboards: req.body.dashName}, function (err, dash) {
                     dash.widgets.push(req.body.widgets)
                 })
             }
