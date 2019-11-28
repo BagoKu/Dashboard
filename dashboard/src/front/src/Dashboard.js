@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import clsx from 'clsx';
 import {FaFacebookMessenger} from 'react-icons/fa';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -16,6 +16,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove'
 import Fab from '@material-ui/core/Fab';
 import {Modal} from "@material-ui/core";
 import Fade from '@material-ui/core/Fade';
@@ -37,6 +38,7 @@ import CardActions from "@material-ui/core/CardActions";
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
 import Select from "@material-ui/core/Select";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 
 const drawerWidth = 240;
 
@@ -54,22 +56,13 @@ const spacesIcon = [
 
 const widgets = [
     {
-        name: 'Messenger',
-    },
-    {
-        name: 'Instagram',
-    },
-    {
-        name: 'Twitter',
-    },
-    {
-        name: 'Outlook',
-    },
-    {
-        name: 'GitHub',
-    },
-    {
         name: 'Weather',
+    },
+    {
+        name: 'Youtube',
+    },
+    {
+        name: 'Twitch',
     },
 ];
 
@@ -188,6 +181,7 @@ function Dashboard() {
     const [currentWidgetsToDisplay, setCurrentWidgetsToDisplay] = React.useState([]);
 
     const handleCurrentWidgetsToDisplay = (widgets) => {
+        console.log(JSON.stringify(userWidgets));
         setCurrentWidgetsToDisplay(widgets);
     };
 
@@ -246,7 +240,6 @@ function Dashboard() {
         tmpObject.widgets.push(widgetToAdd);
         tmpArray[index] = tmpObject;
         setUserWidgets(tmpArray);
-        console.log("Result: " + JSON.stringify(userWidgets));
     };
 
     const addUserWidget = (dashboardName, widgetToAdd) => {
@@ -273,6 +266,26 @@ function Dashboard() {
         for (; i < userWidgets.length; i++) {
             if (userWidgets[i].name === dashboardName) {
                 handleCurrentWidgetsToDisplay(userWidgets[i].widgets);
+            }
+        }
+    };
+
+    const removeDashboard = (dashboardName) => {
+
+        let tmpArray = userWidgets;
+        let arrayLen = tmpArray.length;
+        let i = 0;
+
+        for (; i < userWidgets.length; i++) {
+            if (userWidgets[i].name === dashboardName) {
+                console.log(dashboardName);
+                console.log(JSON.stringify(tmpArray));
+                console.log(JSON.stringify(tmpArray.slice(0, i).concat(tmpArray.slice(i + 1, arrayLen))));
+                console.log(JSON.stringify(tmpArray.filter(item => item.name !== dashboardName)));
+                handleCurrentWidgetsToDisplay(userWidgets[0].widgets);
+                handleCurrentDashboardName(dashboardName);
+                setUserWidgets(userWidgets.filter(item => item.name !== dashboardName));
+                break;
             }
         }
     };
@@ -327,6 +340,7 @@ function Dashboard() {
                         <ListItem key={`section-${index}`} button onClick={function() {handle(space.name)}}>
                             <ListItemIcon>{space.icon}</ListItemIcon>
                             <ListItemText primary={space.name}/>
+                            {space.name !== "Home" && <IconButton><RemoveIcon/></IconButton>}
                         </ListItem>
                     ))}
                 </List>
