@@ -38,6 +38,7 @@ import CardActions from "@material-ui/core/CardActions";
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
 import Select from "@material-ui/core/Select";
+import user from "./ConnectToApi";
 import apis from './ConnectToOtherApi'
 
 const drawerWidth = 240;
@@ -197,8 +198,8 @@ function Dashboard() {
     };
 
     const getUsername = () => {
-      const username = Cookies.get('username');
-      console.log(username);
+      const _id = Cookies.get('_id');
+      console.log(_id);
     };
 
     const handleDrawerOpen = () => {
@@ -236,6 +237,8 @@ function Dashboard() {
     const addUserSpace = (Name, Icon) => {
         setuserDashboards(userDashboards.concat([{name: Name, icon: Icon}]));
         setUserWidgets(userWidgets.concat([{name: Name, widgets: []}]))
+        var email = Cookies.get('_email');
+        user.addDashboard(email, Name, Icon)
     };
 
     const addUserWidget = (dashboardName, widgetToAdd) => {
@@ -246,6 +249,7 @@ function Dashboard() {
                 handleCurrentWidgetsToDisplay(userWidgets[i].widgets);
             }
         }
+        user.addWidget(Cookies.get('_email'), dashboardName, widgetToAdd, "jcp encore");
     };
 
     const closeDashboardModal = (iconToAdd) => {
