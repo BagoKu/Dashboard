@@ -9,14 +9,14 @@ import List from '@material-ui/core/List';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
+import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
+import AddRoundedIcon from '@material-ui/icons/AddRounded';
+import RemoveRoundedIcon from '@material-ui/icons/RemoveRounded';
 import Fab from '@material-ui/core/Fab';
 import {Modal} from "@material-ui/core";
 import Fade from '@material-ui/core/Fade';
@@ -26,19 +26,19 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
 import Divider from "@material-ui/core/Divider";
-import HomeIcon from "@material-ui/icons/Home";
+import HomeRoundedIcon from "@material-ui/icons/HomeRounded";
 import Cookies from 'js-cookie';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import WorkIcon from '@material-ui/icons/Work';
-import ShareIcon from '@material-ui/icons/Share';
+import WorkRoundedIcon from '@material-ui/icons/WorkRounded';
+import ShareRoundedIcon from '@material-ui/icons/ShareRounded';
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
-import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
-import CardActions from "@material-ui/core/CardActions";
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
 import Select from "@material-ui/core/Select";
+import WbSunnyRoundedIcon from '@material-ui/icons/WbSunnyRounded';
+import PlayCircleOutlineRoundedIcon from '@material-ui/icons/PlayCircleOutlineRounded';
+import LiveTvRoundedIcon from '@material-ui/icons/LiveTvRounded';
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import apis from './ConnectToOtherApi'
 
@@ -46,25 +46,31 @@ const drawerWidth = 240;
 
 const spacesIcon = [
     {
-        icon: <HomeIcon/>
+        icon: <HomeRoundedIcon/>
     },
     {
-        icon: <WorkIcon/>
+        icon: <WorkRoundedIcon/>
     },
     {
-        icon: <ShareIcon/>
+        icon: <ShareRoundedIcon/>
     },
 ];
 
 const widgets = [
     {
         name: 'Weather',
+        icon: <WbSunnyRoundedIcon/>,
+        content: <TextField/>
     },
     {
         name: 'Youtube',
+        icon: <PlayCircleOutlineRoundedIcon/>,
+        content: <TextField/>
     },
     {
         name: 'Twitch',
+        icon: <LiveTvRoundedIcon/>,
+        content: <TextField/>
     }
 ];
 
@@ -177,17 +183,29 @@ function Dashboard() {
     const [openSpaceModal, setOpenSpaceModal] = React.useState(false);
     const [spaceToAdd, setSpaceToAdd] = React.useState('');
     const [widgetToAdd, setWidgetToAdd] = React.useState('');
-    const [userDashboards, setuserDashboards] = React.useState([{name: 'Home', icon: <HomeIcon/>}]);
+    const [userDashboards, setuserDashboards] = React.useState([{name: 'Home', icon: <HomeRoundedIcon/>}]);
     const [userWidgets, setUserWidgets] = React.useState([{name: 'Home', widgets: []}]);
-    const [currentDashboardName, setCurrentDashboardName] = React.useState('Home');
+    const [currentDashboardName, setCurrentDashboardName] = React.useState({name: 'Home', icon: <HomeRoundedIcon/>});
     const [currentWidgetsToDisplay, setCurrentWidgetsToDisplay] = React.useState([]);
 
-    const handleCurrentWidgetsToDisplay = (widgets) => {
-        setCurrentWidgetsToDisplay(widgets);
+    const handleCurrentWidgetsToDisplay = (widgetsToDisplay) => {
+
+        let tmpArr = [];
+
+        for (let i = 0; i < widgetsToDisplay.length; i++) {
+            for (let j = 0; j < widgets.length; j++) {
+                if (widgetsToDisplay[i] === widgets[j].name) {
+                    tmpArr.push({name: widgets[j].name, icon: widgets[j].icon, content: widgets[j].content});
+                }
+            }
+        }
+        setCurrentWidgetsToDisplay(tmpArr);
     };
 
-    const handleCurrentDashboardName = (name) => {
-        setCurrentDashboardName(name);
+    const handleCurrentDashboardName = (name, icon) => {
+        let tmpObj = {name: name, icon: icon};
+
+        setCurrentDashboardName(tmpObj);
     };
 
     const getUsername = () => {
@@ -259,8 +277,8 @@ function Dashboard() {
         addUserSpace(document.getElementById("dashboard-name").value, iconToAdd);
     };
 
-    const handle = (dashboardName) => {
-        handleCurrentDashboardName(dashboardName);
+    const handle = (dashboardName, icon) => {
+        handleCurrentDashboardName(dashboardName, icon);
         let i = 0;
 
         for (; i < userWidgets.length; i++) {
@@ -309,11 +327,10 @@ function Dashboard() {
                             [classes.hide]: openDrawer,
                         })}
                     >
-                        <MenuIcon />
+                        <MenuRoundedIcon/>
                     </IconButton>
-                    <Typography variant="h6" noWrap>
-                        Dashboard: {currentDashboardName}
-                    </Typography>
+                    <Typography>{currentDashboardName.name}</Typography>
+                    {currentDashboardName.icon}
                 </Toolbar>
             </AppBar>
             <Drawer
@@ -337,17 +354,17 @@ function Dashboard() {
                 </div>
                 <List>
                     {userDashboards.map((space, index) => (
-                        <ListItem key={`section-${index}`} button onClick={function() {handle(space.name)}}>
+                        <ListItem key={`section-${index}`} button onClick={function() {handle(space.name, space.icon)}}>
                             <ListItemIcon>{space.icon}</ListItemIcon>
                             <ListItemText primary={space.name}/>
-                            {space.name !== "Home" && <IconButton><RemoveIcon/></IconButton>}
+                            {space.name !== "Home" && <ListItemSecondaryAction><IconButton><RemoveRoundedIcon/></IconButton></ListItemSecondaryAction>}
                         </ListItem>
                     ))}
                 </List>
                 <Divider/>
                 <List>
                     <ListItem button onClick={function() {handleSpaceModalOpen()}}>
-                        <ListItemIcon><AddIcon/></ListItemIcon>
+                        <ListItemIcon><AddRoundedIcon/></ListItemIcon>
                         <ListItemText primary={'Add new dashboard'}/>
                     </ListItem>
                 </List>
@@ -389,15 +406,10 @@ function Dashboard() {
                     <Box display={'flex'} flexDirection={'row'}>
                         {currentWidgetsToDisplay.map((item, index) => (
                             <Card key={`cards-${index}`} style={{margin: 10}}>
-                                <CardHeader avatar={<FaFacebookMessenger/>} title={item}/>
+                                <CardHeader avatar={item.icon} title={item.name} style={{backgroundColor: '#3f51b5', color: 'white'}}/>
                                 <CardContent>
-                                    <Typography>{item}</Typography>
+                                    {item.content}
                                 </CardContent>
-                                <CardActions>
-                                    <IconButton>
-                                        <FavoriteIcon/>
-                                    </IconButton>
-                                </CardActions>
                             </Card>
                         ))}
                     </Box>
@@ -405,7 +417,7 @@ function Dashboard() {
             </main>
             <div>
                 <Fab className={classes.addButton} onClick={handleModalOpen}>
-                    <AddIcon/>
+                    <AddRoundedIcon/>
                 </Fab>
                 <Modal className={classes.modal}
                        open={openModal}
@@ -436,7 +448,7 @@ function Dashboard() {
                                     </MenuItem>
                                 ))}
                             </TextField>
-                            <Button className={classes.button} onClick={function(event) {handleModalClose(); addUserWidget(currentDashboardName, widgetToAdd);}}>
+                            <Button className={classes.button} onClick={function(event) {handleModalClose(); addUserWidget(currentDashboardName.name, widgetToAdd);}}>
                                 OK
                             </Button>
                         </Paper>
