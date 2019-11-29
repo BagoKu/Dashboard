@@ -6,19 +6,17 @@ const process = require('process');
 
 
 
-var port = 8800
+var port = 8800;
 
 async function addUser(_username, _email, _password) {
     const data = JSON.stringify({
         name: _username,
         email: _email,
         password: _password,
-        widgets: [{
-            dashName: "first_connection"
-        }],
         dashboards: [{
-            name: "Home",
-            icon: "oui"
+            _type: "dashboard",
+            _name: "Home",
+            _icon: "oui"
         }]
     });
 
@@ -35,18 +33,14 @@ async function addUser(_username, _email, _password) {
 
     const req = https.request(options, (res) => {
         console.log(`statusCode: ${res.statusCode}`);
-
-        /*res.on('data', (d) => {
-            process.stdout.write(d)
-        })*/
-    })
+    });
 
     req.on('error', (error) => {
         console.error(error)
-    })
+    });
 
-    req.write(data)
-    req.end()
+    req.write(data);
+    req.end();
 
     Cookies.set('_password', _password);
     Cookies.set('_email', _email);
@@ -56,11 +50,12 @@ async function addUser(_username, _email, _password) {
 function addWidget(_email, _dashboard, _widgetName, _widgetType) {
     const data = JSON.stringify({
         email: _email,
-        widgets: [{
-            dashName: _dashboard,
-            name: _widgetName,
-            type: _widgetType
-        }]
+        dashboards: {
+            _type: "widget",
+            _link: _dashboard,
+            _name: _widgetName,
+            _data: _widgetType
+        }
     });
 
     const options = {
@@ -72,21 +67,17 @@ function addWidget(_email, _dashboard, _widgetName, _widgetType) {
             'Content-Type': 'application/json',
             'Content-Length': data.length
         }
-    }
+    };
 
     const req = https.request(options, (res) => {
         console.log(`statusCode: ${res.statusCode}`);
-
-        res.on('data', (d) => {
-            process.stdout.write(d)
-        })
-    })
+    });
 
     req.on('error', (error) => {
         console.error(error)
-    })
+    });
 
-    req.write(data)
+    req.write(data);
     req.end()
 }
 
@@ -95,8 +86,9 @@ function addDashboard(_email, _dashboardName, _icon) {
     const data = JSON.stringify({
         email: _email,
         dashboards: {
-            name: _dashboardName,
-            icon: _icon.type.displayName
+            _type: "dashboard",
+            _name: _dashboardName,
+            _icon: _icon.type.displayName
         }
     });
 
@@ -111,21 +103,17 @@ function addDashboard(_email, _dashboardName, _icon) {
             'Content-Type': 'application/json',
             'Content-Length': data.length
         }
-    }
+    };
 
     const req = https.request(options, (res) => {
         console.log(`statusCode: ${res.statusCode}`);
-
-        res.on('data', (d) => {
-            process.stdout.write(d)
-        })
-    })
+    });
 
     req.on('error', (error) => {
         console.error(error)
-    })
+    });
 
-    req.write(data)
+    req.write(data);
     req.end()
 }
 
@@ -144,7 +132,7 @@ async function findUser(_email, _password) {
             }
             return("ko");
         })
-        .catch(error => console.log(error))
+        .catch(error => console.log(error));
     return(response);
 }
 

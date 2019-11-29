@@ -31,14 +31,12 @@ var userSchema = mongoose.Schema({
     name: String,
     email: String,
     password: String,
-    widgetsList: [{
-        dashName: String,
-        name: String,
-        type: String
-    }],
     dashboards: [{
-        name: String,
-        icon: String,
+        _type: String,
+        _link: String,
+        _name: String,
+        _icon: String,
+        _data: String,
     }]
 });
 
@@ -59,14 +57,11 @@ myRouter.route('/')
         user.name = req.body.name;
         user.email = req.body.email;
         user.password = req.body.password;
-        user.widgetsList = [{
-            dashName: req.body.dashName
-        }];
         user.dashboards = req.body.dashboards;
         user.save(function (err) {
             if (err)
                 res.send(err);
-            res.send(   {success: true, msg: 'New User is now in your db'});
+            res.send({success: true, msg: 'New User is now in your db'});
         });
     })
     .put(function(req, res) {
@@ -81,9 +76,6 @@ myRouter.route('/')
             if(usr && req.body.dashboards) {
                 usr.dashboards.push(req.body.dashboards)
             }
-            /*if (usr && req.body.widgets) {
-                usr.widgetsList.push(req.body.widgets)
-            }*/
             usr.save(function (err) {
                 if (err)
                     res.send(err);
