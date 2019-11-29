@@ -10,7 +10,7 @@ var port = 8800
 var options = { server: { socketOptions: { keepAlice: 300000, connectTimeoutMS: 30000}},
     replset: {socketOptions: {keepAlive: 300000, connectTimeoutMS: 30000}}};
 
-var urlmongo = "mongodb://mongo:27017/mydb";
+var urlmongo = "mongodb://mongo:27017/db_dashboard";
 
 mongoose.connect(urlmongo, options);
 
@@ -26,39 +26,21 @@ app.use(cors());
 
 var myRouter = express.Router();
 
-var widgetSchema = mongoose.Schema({
-    name: String,
-    type: String
-})
-
-var Widgets = mongoose.model('Widgets', widgetSchema);
-
-var dashboardSchema = mongoose.Schema({
-    name: String,
-    icon: String,
-    widgets: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Widgets',
-        //required: false
-    }]
-})
-
-var Dashboards = mongoose.model('Dashboards', dashboardSchema);
 
 var userSchema = mongoose.Schema({
     name: String,
     email: String,
     password: String,
+    widgetsList: [{
+        dashName: String,
+        name: String,
+        type: String
+    }],
     dashboards: [{
         name: String,
         icon: String,
-        widgets: [{
-            name: String,
-            type: String,
-        }]
-        //required: false
     }]
-})
+});
 
 var User = mongoose.model('User', userSchema);
 
@@ -72,36 +54,39 @@ myRouter.route('/')
         });
     })
     .post(function(req, res) {
-        var user = new User();
+        let user = new User();
 
         user.name = req.body.name;
         user.email = req.body.email;
         user.password = req.body.password;
-        //user.set({ dashboards: req.body.dashboards });
+        user.widgetsList = [{
+            dashName: req.body.dashName
+        }];
         user.dashboards = req.body.dashboards;
-        user.save(function(err) {
-            if(err) {
+        user.save(function (err) {
+            if (err)
                 res.send(err);
-            }
-            res.json({message : 'New User is now in your db'});
+            res.send(   {success: true, msg: 'New User is now in your db'});
         });
     })
     .put(function(req, res) {
         User.findOne({email: req.body.email}, function (err, usr) {
+            console.log(typeof usr);
+            console.log(usr);
+
+            console.log()
             if (err){
                 res.send(err);
             }
             if(usr && req.body.dashboards) {
                 usr.dashboards.push(req.body.dashboards)
             }
-            if (usr && req.body.widgets) {
-                usr.findOne({dashboards: req.body.dashName}, function (err, dash) {
-                    dash.widgets.push(req.body.widgets)
-                })
-            }
-            usr.save(function (err, updatedUser) {
+            /*if (usr && req.body.widgets) {
+                usr.widgetsList.push(req.body.widgets)
+            }*/
+            usr.save(function (err) {
                 if (err)
-                    return res.json({ success: false, msg: 'Une erreur est survenue, veuillez réessayer' });
+                    res.send(err);
                 res.json({ success: true, msg: 'User updated' });
             });
         })

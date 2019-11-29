@@ -2,6 +2,8 @@ import axios from 'axios';
 import Cookies from "js-cookie";
 var https = require('http');
 var request = require('request');
+const process = require('process');
+
 
 
 var port = 8800
@@ -11,9 +13,13 @@ async function addUser(_username, _email, _password) {
         name: _username,
         email: _email,
         password: _password,
-        dashboards: {
-            name: "Home"
-        }
+        widgets: [{
+            dashName: "first_connection"
+        }],
+        dashboards: [{
+            name: "Home",
+            icon: "oui"
+        }]
     });
 
     const options = {
@@ -30,9 +36,9 @@ async function addUser(_username, _email, _password) {
     const req = https.request(options, (res) => {
         console.log(`statusCode: ${res.statusCode}`);
 
-        res.on('data', (d) => {
+        /*res.on('data', (d) => {
             process.stdout.write(d)
-        })
+        })*/
     })
 
     req.on('error', (error) => {
@@ -50,11 +56,11 @@ async function addUser(_username, _email, _password) {
 function addWidget(_email, _dashboard, _widgetName, _widgetType) {
     const data = JSON.stringify({
         email: _email,
-        dashName: _dashboard,
-        widgets: {
+        widgets: [{
+            dashName: _dashboard,
             name: _widgetName,
             type: _widgetType
-        }
+        }]
     });
 
     const options = {
@@ -67,9 +73,6 @@ function addWidget(_email, _dashboard, _widgetName, _widgetType) {
             'Content-Length': data.length
         }
     }
-
-    console.log(_email)
-    console.log('aled')
 
     const req = https.request(options, (res) => {
         console.log(`statusCode: ${res.statusCode}`);
@@ -92,10 +95,12 @@ function addDashboard(_email, _dashboardName, _icon) {
     const data = JSON.stringify({
         email: _email,
         dashboards: {
-            name: _dashboardName
-            //icon: _icon
+            name: _dashboardName,
+            icon: _icon.type.displayName
         }
     });
+
+    console.log(_icon.type.displayName);
 
     const options = {
         hostname: 'localhost',
@@ -107,9 +112,6 @@ function addDashboard(_email, _dashboardName, _icon) {
             'Content-Length': data.length
         }
     }
-
-    console.log(_email)
-    console.log('aled')
 
     const req = https.request(options, (res) => {
         console.log(`statusCode: ${res.statusCode}`);
@@ -137,6 +139,24 @@ async function findUser(_email, _password) {
                     console.log("ok");
                     console.log(res.data[i].name);
                     return(res.data[i].email);
+                } else
+                    console.log("ko");
+            }
+            return("ko");
+        })
+        .catch(error => console.log(error))
+    return(response);
+}
+
+async function loadDashboards(_email, _password) {
+    const response = await axios.get(`http://localhost:` + port)
+        .then(res => {
+            console.log("test");
+            for (var i = 0; res.data[i] != null; i++) {
+                if (_email === res.data[i].email && _password === res.data[i].password) {
+                    console.log("ok");
+                    console.log(res.data[i].name);
+                    return(res.data[i].dashboards);
                 } else
                     console.log("ko");
             }
