@@ -10,6 +10,9 @@ import WbSunnyRoundedIcon from "@material-ui/icons/WbSunnyRounded";
 import TextField from "@material-ui/core/TextField";
 import PlayCircleOutlineRoundedIcon from "@material-ui/icons/PlayCircleOutlineRounded";
 import LiveTvRoundedIcon from "@material-ui/icons/LiveTvRounded";
+import Cookies from "js-cookie";
+import user from "../ConnectToApi";
+
 
 const widgets = [
     {
@@ -71,6 +74,7 @@ function DashboardList(props) {
                 break;
             }
         }
+        user.deleteData(Cookies.get('_email'), dashboardName, "dashboard");
     };
 
     return (

@@ -58,9 +58,6 @@ function addWidget(_email, _dashboard, _widgetName, _widgetType) {
         }
     });
 
-    console.log(_widgetName)
-    console.log(_dashboard.name)
-
     const options = {
         hostname: 'localhost',
         port: port,
@@ -84,8 +81,8 @@ function addWidget(_email, _dashboard, _widgetName, _widgetType) {
     req.end()
 }
 
-function addDashboard(_email, _dashboardName, _icon) {
-
+function addDashboard(_email, _dashboardName, _icon)
+{
     const data = JSON.stringify({
         email: _email,
         dashboards: {
@@ -94,8 +91,6 @@ function addDashboard(_email, _dashboardName, _icon) {
             _icon: _icon.type.displayName
         }
     });
-
-    console.log(_icon.type.displayName);
 
     const options = {
         hostname: 'localhost',
@@ -121,14 +116,10 @@ function addDashboard(_email, _dashboardName, _icon) {
 }
 
 async function findUser(_email, _password) {
-    console.log("test2");
     const response = await axios.get(`http://localhost:` + port)
         .then(res => {
-            console.log("test");
             for (var i = 0; res.data[i] != null; i++) {
                 if (_email === res.data[i].email && _password === res.data[i].password) {
-                    console.log("ok");
-                    console.log(res.data[i].name);
                     return(res.data[i].email);
                 } else
                     console.log("ko");
@@ -142,11 +133,8 @@ async function findUser(_email, _password) {
 async function loadDashboards(_email, _password) {
     const response = await axios.get(`http://localhost:` + port)
         .then(res => {
-            console.log("test");
             for (var i = 0; res.data[i] != null; i++) {
                 if (_email === res.data[i].email && _password === res.data[i].password) {
-                    console.log("ok");
-                    console.log(res.data[i].name);
                     return(res.data[i].dashboards);
                 } else
                     console.log("ko");
@@ -157,8 +145,39 @@ async function loadDashboards(_email, _password) {
     return(response);
 }
 
+function deleteData(_email, _dashName, _type) {
+    const data = JSON.stringify({
+        email: _email,
+        typeToRemove: _type,
+        nameToRemove: _dashName,
+    });
+
+    const options = {
+        hostname: 'localhost',
+        port: port,
+        path: '/',
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': data.length
+        }
+    };
+
+    const req = https.request(options, (res) => {
+        console.log(`statusCode: ${res.statusCode}`);
+    });
+
+    req.on('error', (error) => {
+        console.error(error)
+    });
+
+    req.write(data);
+    req.end()
+
+}
+
 const user = {
-    addUser, findUser, addDashboard, addWidget, loadDashboards
+    addUser, findUser, addDashboard, addWidget, loadDashboards, deleteData
 };
 
 export default user;

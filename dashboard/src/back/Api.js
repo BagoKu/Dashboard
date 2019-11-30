@@ -66,15 +66,21 @@ myRouter.route('/')
     })
     .put(function(req, res) {
         User.findOne({email: req.body.email}, function (err, usr) {
-            console.log(typeof usr);
-            console.log(usr);
-
-            console.log()
             if (err){
                 res.send(err);
             }
-            if(usr && req.body.dashboards) {
+            if (usr && req.body.dashboards) {
                 usr.dashboards.push(req.body.dashboards)
+            }
+            if (usr && req.body.nameToRemove && req.body.typeToRemove) {
+                for (let i = 0; usr.dashboards[i]; i++) {
+                    if ((usr.dashboards[i]._name === req.body.nameToRemove
+                        && usr.dashboards[i]._type === req.body.typeToRemove) ||
+                    usr.dashboards[i]._link === req.body.nameToRemove) {
+                        usr.dashboards.splice(i, 1);
+                        i--;
+                    }
+                }
             }
             usr.save(function (err) {
                 if (err)
@@ -98,7 +104,4 @@ app.use(myRouter);
 
 module.exports = User;
 
-/*app.listen(port, hostname, function() {
-    console.log("mon serveur fonctionne sur http://" + hostname + ":" + port + "\n");
-});*/
 app.listen(port, () => console.log("mon serveur est sur le port : " + port));
