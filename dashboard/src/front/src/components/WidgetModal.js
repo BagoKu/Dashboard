@@ -12,6 +12,8 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import WbSunnyRoundedIcon from "@material-ui/icons/WbSunnyRounded";
 import PlayCircleOutlineRoundedIcon from "@material-ui/icons/PlayCircleOutlineRounded";
 import LiveTvRoundedIcon from "@material-ui/icons/LiveTvRounded";
+import user from "../ConnectToApi";
+import Cookies from "js-cookie";
 
 const widgets = [
     {
@@ -104,6 +106,7 @@ function WidgetModal(props) {
         tmpObject.widgets.push(widgetToAdd);
         tmpArray[index] = tmpObject;
         props.setWidgets(tmpArray);
+        user.addWidget(Cookies.get('_email'), dashboard, widgetToAdd, 'jcpencore');
     };
 
     const addUserWidget = (dashboardName, widgetToAdd) => {

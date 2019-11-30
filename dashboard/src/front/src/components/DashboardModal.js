@@ -16,6 +16,8 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import HomeRoundedIcon from "@material-ui/icons/HomeRounded";
 import WorkRoundedIcon from "@material-ui/icons/WorkRounded";
 import ShareRoundedIcon from "@material-ui/icons/ShareRounded";
+import user from "../ConnectToApi";
+import Cookies from "js-cookie";
 
 const spacesIcon = [
     {
@@ -66,6 +68,7 @@ function DashboardModal(props) {
     const addUserSpace = (Name, Icon) => {
         props.setDashboards(props.dashboards.concat([{name: Name, icon: Icon}]));
         props.setWidgets(props.widgets.concat([{name: Name, widgets: []}]));
+        user.addDashboard(Cookies.get('_email'), Name, Icon);
     };
 
     const closeDashboardModal = (iconToAdd) => {

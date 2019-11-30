@@ -52,11 +52,14 @@ function addWidget(_email, _dashboard, _widgetName, _widgetType) {
         email: _email,
         dashboards: {
             _type: "widget",
-            _link: _dashboard,
+            _link: _dashboard.name,
             _name: _widgetName,
             _data: _widgetType
         }
     });
+
+    console.log(_widgetName)
+    console.log(_dashboard.name)
 
     const options = {
         hostname: 'localhost',
@@ -155,7 +158,7 @@ async function loadDashboards(_email, _password) {
 }
 
 const user = {
-    addUser, findUser, addDashboard, addWidget
+    addUser, findUser, addDashboard, addWidget, loadDashboards
 };
 
 export default user;
