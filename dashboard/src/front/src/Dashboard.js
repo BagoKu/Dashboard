@@ -28,42 +28,6 @@ import LiveTvRoundedIcon from "@material-ui/icons/LiveTvRounded";
 
 const drawerWidth = 240;
 
-
-/*const loadSpace = () => {
-        const dash = user.loadDashboards(Cookies.get('_email'), Cookies.get('_password'));
-
-        for (let i = 0; dash[i]; i++) {
-            if (dash[i]._type === "dashboard") {
-            la fonction qui permet de load ()
-            dash[i]._name pour le nom du dashboard
-            dash[i]._icon pour le nom de l'icon
-                }
-        }
-    }
-
-    j'ai fait cette fonction pour récuperer l'icon vu que avec dash[i]._icon tu recuperes que le nom de l'icon
-    const checkIcon = (Name) => {
-        for (let i = 0; spacesIcon[i]; i++) {
-            if (spacesIcon[i].type.displayName === Name) {
-                return(spacesIcon[i]);
-            }
-        }
-    }
-
-    const loadWidget = () => {
-        const widget = user.loadDashboards(Cookies.get('_email'), Cookies.get('_password'));
-
-        for (let i = 0; widget[i]; i++) {
-            if (widget[i]._type === "widget") {
-            la fonction qui permet de load ()
-            widget[i]._name pour le nom du widget (youtube, weather, etc..)
-            widget[i]._link pour le nom du dashboard dans lequel il est
-            widget[i]._data pour l'instant y'a rien dedans mais l'idee c de save genre la ville pour la meteo
-            }
-        }
-    }
-*/
-
 const useStyles = makeStyles(theme => ({
     root: {
         display: 'flex',
@@ -197,6 +161,7 @@ function Dashboard() {
                 }
             }
             setUserDashboards(tmpArrObj);
+            setCurrentDashboardDisplay(tmpArrObj[0]);
         }
         async function loadWidgets() {
             const widget = await user.loadDashboards(Cookies.get('_email'), Cookies.get('_password'));
