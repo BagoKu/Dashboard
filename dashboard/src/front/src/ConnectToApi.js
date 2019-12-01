@@ -134,12 +134,12 @@ async function loadDashboards(_email, _password) {
     const response = await axios.get(`http://localhost:` + port)
         .then(res => {
             for (var i = 0; res.data[i] != null; i++) {
-                if (_email === res.data[i].email && _password === res.data[i].password) {
+                if (_email === res.data[i].email) {
                     return(res.data[i].dashboards);
                 } else
-                    console.log("ko");
+                    console.log("ko1");
             }
-            return("ko");
+            return("ko2");
         })
         .catch(error => console.log(error))
     return(response);

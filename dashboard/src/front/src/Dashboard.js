@@ -16,6 +16,15 @@ import DashboardList from "./components/DashboardList";
 import DashboardModal from "./components/DashboardModal";
 import WidgetList from "./components/WidgetList";
 import WidgetModal from "./components/WidgetModal";
+import user from "./ConnectToApi";
+import Cookies from "js-cookie";
+import WorkRoundedIcon from "@material-ui/icons/WorkRounded";
+import ShareRoundedIcon from "@material-ui/icons/ShareRounded";
+import DashboardRoundedIcon from '@material-ui/icons/DashboardRounded';
+import WbSunnyRoundedIcon from "@material-ui/icons/WbSunnyRounded";
+import TextField from "@material-ui/core/TextField";
+import PlayCircleOutlineRoundedIcon from "@material-ui/icons/PlayCircleOutlineRounded";
+import LiveTvRoundedIcon from "@material-ui/icons/LiveTvRounded";
 
 const drawerWidth = 240;
 
@@ -137,13 +146,95 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+const spacesIcon = [
+    {
+        name: "HomeRoundedIcon",
+        icon: <HomeRoundedIcon/>
+    },
+    {
+        name: "WorkRoundedIcon",
+        icon: <WorkRoundedIcon/>
+    },
+    {
+        name: "ShareRoundedIcon",
+        icon: <ShareRoundedIcon/>
+    },
+];
+
+const widgets = [
+    {
+        name: 'Weather',
+        icon: <WbSunnyRoundedIcon/>,
+        content: <TextField/>
+    },
+    {
+        name: 'Youtube',
+        icon: <PlayCircleOutlineRoundedIcon/>,
+        content: <TextField/>
+    },
+    {
+        name: 'Twitch',
+        icon: <LiveTvRoundedIcon/>,
+        content: <TextField/>
+    }
+];
+
 function Dashboard() {
 
+    React.useEffect(() => {
+        async function loadUserData() {
+            const dash = await user.loadDashboards(Cookies.get('_email'), Cookies.get('_password'));
+            let tmpArrObj = [];
+            for (let i = 0; dash[i]; i++) {
+                let tmpObj = {name: dash[i]._name, icon: <DashboardRoundedIcon/>};
+                if (dash[i]._type === "dashboard") {
+                    for (let j = 0; j < spacesIcon.length; j++) {
+                        if (dash[i]._icon === spacesIcon[j].name) {
+                            tmpObj.icon = spacesIcon[j].icon;
+                        }
+                    }
+                    tmpArrObj.push(tmpObj);
+                }
+            }
+            setUserDashboards(tmpArrObj);
+        }
+        async function loadWidgets() {
+            const widget = await user.loadDashboards(Cookies.get('_email'), Cookies.get('_password'));
+
+            let tmpArrObj = [{name: 'Home', widgets: []}];
+            let widgetsToDisplay = [];
+            for (let i = 0; widget[i]; i++) {
+                if (widget[i]._type === "widget") {
+                    for (let j = 0; tmpArrObj[j]; j++) {
+                        if (tmpArrObj[j].name === widget[i]._link) {
+                            tmpArrObj[j].widgets.push(widget[i]._name)
+                        } else {
+                            let tmpObj = {name: '', widgets: []};
+                            tmpObj.name = widget[i]._link;
+                            tmpObj.widgets.push(widget[i]._name);
+                            tmpArrObj.push(tmpObj);
+                        }
+                    }
+                }
+            }
+            setUserWidgets(tmpArrObj);
+            for (let i = 0; i < tmpArrObj[0].widgets.length; i++) {
+                for (let j = 0; j < widgets.length; j++) {
+                    if (tmpArrObj[0].widgets[i] === widgets[j].name) {
+                        widgetsToDisplay.push(widgets[j]);
+                    }
+                }
+            }
+            setCurrentWidgetDisplay(widgetsToDisplay);
+        }
+        loadUserData();
+        loadWidgets();
+    }, []);
     const classes = useStyles();
     const theme = useTheme();
     const [openDrawer, setOpenDrawer] = React.useState(false);
-    const [userWidgets, setUserWidgets] = React.useState([{name: 'Home', widgets: []}]);
-    const [userDashboards, setUserDashboards] = React.useState([{name: 'Home', icon: <HomeRoundedIcon/>}]);
+    const [userWidgets, setUserWidgets] = React.useState([]);
+    const [userDashboards, setUserDashboards] = React.useState([]);
     const [currentWidgetDisplay, setCurrentWidgetDisplay] = React.useState([]);
     const [currentDashboardDisplay, setCurrentDashboardDisplay] = React.useState({name: 'Home', icon: <HomeRoundedIcon/>});
 

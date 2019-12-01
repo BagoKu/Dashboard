@@ -55,12 +55,20 @@ function DashboardList(props) {
 
     const handle = (dashboardName, icon) => {
 
+        let changed = 0;
         handleCurrentDashboardName(dashboardName, icon);
 
+        console.log(dashboardName);
+        console.log(JSON.stringify(props.widgets));
         for (let i = 0; i < props.widgets.length; i++) {
             if (props.widgets[i].name === dashboardName) {
+                changed = 1;
                 handleCurrentWidgetsToDisplay(props.widgets[i].widgets);
+                break;
             }
+        }
+        if (changed === 0) {
+            props.setCurrentWidgets([]);
         }
     };
 
