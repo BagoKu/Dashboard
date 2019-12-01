@@ -137,7 +137,7 @@ async function loadDashboards(_email, _password) {
                     return (res.data[i].dashboards);
                 }
             }
-            return("ko");
+            return("ko2");
         })
         .catch(error => console.log(error))
     return(response);

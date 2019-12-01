@@ -9,29 +9,8 @@ import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import WbSunnyRoundedIcon from "@material-ui/icons/WbSunnyRounded";
-import PlayCircleOutlineRoundedIcon from "@material-ui/icons/PlayCircleOutlineRounded";
-import LiveTvRoundedIcon from "@material-ui/icons/LiveTvRounded";
 import user from "../ConnectToApi";
 import Cookies from "js-cookie";
-
-const widgets = [
-    {
-        name: 'Weather',
-        icon: <WbSunnyRoundedIcon/>,
-        content: <TextField/>
-    },
-    {
-        name: 'Youtube',
-        icon: <PlayCircleOutlineRoundedIcon/>,
-        content: <TextField/>
-    },
-    {
-        name: 'Twitch',
-        icon: <LiveTvRoundedIcon/>,
-        content: <TextField/>
-    }
-];
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -89,9 +68,9 @@ function WidgetModal(props) {
         let tmpArr = [];
 
         for (let i = 0; i < widgetsToDisplay.length; i++) {
-            for (let j = 0; j < widgets.length; j++) {
-                if (widgetsToDisplay[i] === widgets[j].name) {
-                    tmpArr.push({name: widgets[j].name, icon: widgets[j].icon, content: widgets[j].content});
+            for (let j = 0; j < props.customWidgets.length; j++) {
+                if (widgetsToDisplay[i] === props.customWidgets[j].name) {
+                    tmpArr.push({name: props.customWidgets[j].name, icon: props.customWidgets[j].icon, content: props.customWidgets[j].content});
                 }
             }
         }
@@ -104,20 +83,36 @@ function WidgetModal(props) {
         let tmpObject = {name: name, widgets: dashboard.widgets};
 
         tmpObject.widgets.push(widgetToAdd);
-        tmpArray[index] = tmpObject;
+
+        if (index === -1) {
+            tmpArray.push(tmpObject);
+            handleCurrentWidgetsToDisplay(tmpArray[tmpArray.length - 1].widgets);
+        } else {
+            tmpArray[index] = tmpObject;
+        }
         props.setWidgets(tmpArray);
         user.addWidget(Cookies.get('_email'), dashboard, widgetToAdd, 'Work in progress');
     };
 
     const addUserWidget = (dashboardName, widgetToAdd) => {
 
-        let i = 0;
+        let isWidgetPresent = 0;
 
-        for (; i < props.widgets.length; i++) {
+        console.log(JSON.stringify(props.widgets));
+        console.log(dashboardName);
+        console.log(widgetToAdd);
+        console.log(JSON.stringify(props.customWidgets));
+        for (let i = 0; i < props.widgets.length; i++) {
             if (props.widgets[i].name === dashboardName) {
+                isWidgetPresent = 1;
                 addWidgetToDashboard(dashboardName, props.widgets[i], widgetToAdd, i);
                 handleCurrentWidgetsToDisplay(props.widgets[i].widgets);
             }
+        }
+
+        if (isWidgetPresent === 0) {
+            let newWidget = {name: dashboardName, widgets: []};
+            addWidgetToDashboard(dashboardName, newWidget, widgetToAdd, -1);
         }
     };
 
@@ -149,7 +144,7 @@ function WidgetModal(props) {
                                     helperText="Please select the new widget to add"
                                     margin={"normal"}
                         >
-                            {widgets.map((widget, index) => (
+                            {props.customWidgets.map((widget, index) => (
                                 <MenuItem key={`widgets-${index}`} value={widget.name}>
                                     {widget.name}
                                 </MenuItem>
