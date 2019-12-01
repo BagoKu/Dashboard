@@ -3,8 +3,7 @@ import Cookies from "js-cookie";
 var https = require('http');
 var request = require('request');
 const process = require('process');
-
-
+const crypto = require('crypto');
 
 var port = 8800;
 
@@ -12,7 +11,7 @@ async function addUser(_username, _email, _password) {
     const data = JSON.stringify({
         name: _username,
         email: _email,
-        password: _password,
+        password: crypto.pbkdf2Sync(_password, 'alcoholiswater', 100000, 64, 'sha512').toString('hex'),
         dashboards: [{
             _type: "dashboard",
             _name: "Home",
@@ -42,7 +41,7 @@ async function addUser(_username, _email, _password) {
     req.write(data);
     req.end();
 
-    Cookies.set('_password', _password);
+    Cookies.set('_password', crypto.pbkdf2Sync(_password, 'alcoholiswater', 100000, 64, 'sha512').toString('hex'));
     Cookies.set('_email', _email);
 
 }
@@ -119,7 +118,8 @@ async function findUser(_email, _password) {
     const response = await axios.get(`http://localhost:` + port)
         .then(res => {
             for (var i = 0; res.data[i] != null; i++) {
-                if (_email === res.data[i].email && _password === res.data[i].password) {
+                if (_email === res.data[i].email &&
+                    crypto.pbkdf2Sync(_password, 'alcoholiswater', 100000, 64, 'sha512').toString('hex') === res.data[i].password) {
                     return (res.data[i].email);
                 }
             }
@@ -133,7 +133,7 @@ async function loadDashboards(_email, _password) {
     const response = await axios.get(`http://localhost:` + port)
         .then(res => {
             for (var i = 0; res.data[i] != null; i++) {
-                if (_email === res.data[i].email && _password === res.data[i].password) {
+                if (_email === res.data[i].email) {
                     return (res.data[i].dashboards);
                 }
             }
