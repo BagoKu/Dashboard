@@ -5,6 +5,7 @@ import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
 import Avatar from "@material-ui/core/Avatar";
+import Box from "@material-ui/core/Box";
 
 function YoutubeWidget() {
 
@@ -12,12 +13,13 @@ function YoutubeWidget() {
 
     const getYoutubeData = () => {
         apis.requestYoutube("https://www.youtube.com/watch?v=xBjXBNBdU9c").then(res => {
+            console.log(res);
             let tmpObj = [{
                 channel: res.data.items[0].snippet.channelTitle,
                 title: res.data.items[0].snippet.title,
-                views: res.data.items[0].contentDetails.viewCount,
-                likes: res.data.items[0].contentDetails.likeCount,
-                dislikes: res.data.items[0].contentDetails.dislikeCount}];
+                views: res.data.items[0].statistics.viewCount,
+                likes: res.data.items[0].statistics.likeCount,
+                dislikes: res.data.items[0].statistics.dislikeCount}];
             setVideoData(tmpObj);
         });
     };
@@ -32,11 +34,18 @@ function YoutubeWidget() {
             <div>
                 {videoData.map((item, index) => (
                     <div key={`video-${index}`}>
-                        <Typography>{item.title}</Typography>
-                        <Typography>{item.channel}</Typography>
-                        <Typography>{item.views}</Typography>
-                        <Typography>{item.likes}</Typography>
-                        <Typography>{item.dislikes}</Typography>
+                        <Box display={'flex'} flexDirection={'row'}>
+                            <div>
+                                <p>Hello</p>
+                            </div>
+                            <div>
+                                <Typography>{item.title}</Typography>
+                                <Typography>{item.channel}</Typography>
+                                <Typography>{item.views}</Typography>
+                                <Typography>{item.likes}</Typography>
+                                <Typography>{item.dislikes}</Typography>
+                            </div>
+                        </Box>
                     </div>
                 ))}
             </div>

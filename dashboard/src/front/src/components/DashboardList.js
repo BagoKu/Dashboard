@@ -59,6 +59,7 @@ function DashboardList(props) {
                 break;
             }
         }
+        console.log(props.dashboards[0].name);
         handleCurrentDashboardName(props.dashboards[0].name, props.dashboards[0].icon);
         handleCurrentWidgetsToDisplay(props.widgets[0].widgets);
         user.deleteData(Cookies.get('_email'), dashboardName, "dashboard");
@@ -70,7 +71,7 @@ function DashboardList(props) {
                 <ListItem key={`section-${index}`} button onClick={function() {handle(space.name, space.icon)}}>
                     <ListItemIcon>{space.icon}</ListItemIcon>
                     <ListItemText primary={space.name}/>
-                    {space.name !== "Home" && <ListItemSecondaryAction><IconButton onClick={() => removeDashboard(space.name)} ><RemoveIcon/></IconButton></ListItemSecondaryAction>}
+                    {space.name !== "Home" && <IconButton onClick={() => removeDashboard(space.name)} ><RemoveIcon/></IconButton>}
                 </ListItem>
             ))}
         </List>
