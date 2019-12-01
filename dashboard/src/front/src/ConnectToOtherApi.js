@@ -30,10 +30,6 @@ async function requestYoutube(_urlVideo) {
     return(ret);
 }
 
-async function requestGitHub() {
-    const ret = await axios.get('')
-}
-
 async function requestTwitch(username) {
     const helix = axios.create({
         baseURL: 'https://api.twitch.tv/helix/',
@@ -48,8 +44,41 @@ async function requestTwitch(username) {
     return(ret);
 }
 
+async function requestWikipedia(search) {
+    const ret = await axios.get('http://fr.wikipedia.org/w/api.php?action=opensearch&search=' + search);
+
+    return(ret);
+}
+
+async function requestMoviedb(movieTitle) {
+    const ret = await axios.get('https://api.themoviedb.org/3/search/movie', {
+        params: {
+            api_key: "8be7dd08031e2ad3dd83bed9db873720",
+            language: "fr",
+            query: movieTitle
+        },
+        method: 'GET'
+    });
+
+    return(ret);
+}
+
+async function requestNews(article) {
+    const ret = await axios.get('https://newsapi.org/v2/everything', {
+        params: {
+            apiKey: '6571068712ea46dca5e0dcd0173c354f',
+            q: article,
+            sortBy: 'popularity',
+            language: 'fr'
+        },
+        method: 'GET'
+    });
+
+    return(ret);
+}
+
 const apis = {
-    findWeather, requestYoutube, requestTwitch
+    findWeather, requestYoutube, requestTwitch, requestWikipedia, requestMoviedb, requestNews
 };
 
 export default apis;

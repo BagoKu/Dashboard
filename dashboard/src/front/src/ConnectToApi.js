@@ -120,9 +120,8 @@ async function findUser(_email, _password) {
         .then(res => {
             for (var i = 0; res.data[i] != null; i++) {
                 if (_email === res.data[i].email && _password === res.data[i].password) {
-                    return(res.data[i].email);
-                } else
-                    console.log("ko");
+                    return (res.data[i].email);
+                }
             }
             return("ko");
         })
@@ -135,9 +134,8 @@ async function loadDashboards(_email, _password) {
         .then(res => {
             for (var i = 0; res.data[i] != null; i++) {
                 if (_email === res.data[i].email && _password === res.data[i].password) {
-                    return(res.data[i].dashboards);
-                } else
-                    console.log("ko");
+                    return (res.data[i].dashboards);
+                }
             }
             return("ko");
         })
