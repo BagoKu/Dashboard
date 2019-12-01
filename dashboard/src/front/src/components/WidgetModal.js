@@ -91,17 +91,13 @@ function WidgetModal(props) {
             tmpArray[index] = tmpObject;
         }
         props.setWidgets(tmpArray);
-        user.addWidget(Cookies.get('_email'), dashboard, widgetToAdd, 'jcpencore');
+        user.addWidget(Cookies.get('_email'), dashboard, widgetToAdd, 'Work in progress');
     };
 
     const addUserWidget = (dashboardName, widgetToAdd) => {
 
         let isWidgetPresent = 0;
 
-        console.log(JSON.stringify(props.widgets));
-        console.log(dashboardName);
-        console.log(widgetToAdd);
-        console.log(JSON.stringify(props.customWidgets));
         for (let i = 0; i < props.widgets.length; i++) {
             if (props.widgets[i].name === dashboardName) {
                 isWidgetPresent = 1;

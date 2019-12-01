@@ -3,7 +3,6 @@ import List from "@material-ui/core/List";
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import IconButton from "@material-ui/core/IconButton";
 import RemoveIcon from "@material-ui/icons/Remove";
 import Cookies from "js-cookie";
@@ -35,8 +34,6 @@ function DashboardList(props) {
         let changed = 0;
         handleCurrentDashboardName(dashboardName, icon);
 
-        console.log(dashboardName);
-        console.log(JSON.stringify(props.widgets));
         for (let i = 0; i < props.widgets.length; i++) {
             if (props.widgets[i].name === dashboardName) {
                 changed = 1;
@@ -59,7 +56,6 @@ function DashboardList(props) {
                 break;
             }
         }
-        console.log(props.dashboards[0].name);
         handleCurrentDashboardName(props.dashboards[0].name, props.dashboards[0].icon);
         handleCurrentWidgetsToDisplay(props.widgets[0].widgets);
         user.deleteData(Cookies.get('_email'), dashboardName, "dashboard");

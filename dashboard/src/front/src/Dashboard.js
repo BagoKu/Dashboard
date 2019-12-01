@@ -23,11 +23,17 @@ import WorkRoundedIcon from "@material-ui/icons/WorkRounded";
 import ShareRoundedIcon from "@material-ui/icons/ShareRounded";
 import Button from "@material-ui/core/Button";
 import WbSunnyRoundedIcon from "@material-ui/icons/WbSunnyRounded";
-import TextField from "@material-ui/core/TextField";
 import PlayCircleOutlineRoundedIcon from "@material-ui/icons/PlayCircleOutlineRounded";
 import LiveTvRoundedIcon from "@material-ui/icons/LiveTvRounded";
+import LibraryBooksRoundedIcon from '@material-ui/icons/LibraryBooksRounded';
+import LanguageRoundedIcon from '@material-ui/icons/LanguageRounded';
+import TheatersRoundedIcon from '@material-ui/icons/TheatersRounded';
 import WeatherWidget from "./components/WeatherWidget";
 import YoutubeWidget from "./components/YoutubeWidget";
+import TwitchWidget from "./components/TwitchWidget";
+import WikipediaWidget from "./components/WikipediaWidget";
+import MoviedbWidget from "./components/MoviedbWidget";
+import NewsWidget from "./components/NewsWidget";
 
 const drawerWidth = 240;
 
@@ -149,7 +155,22 @@ const widgets = [
     {
         name: 'Twitch',
         icon: <LiveTvRoundedIcon/>,
-        content: <TextField/>
+        content: <TwitchWidget/>
+    },
+    {
+        name: 'Wikipedia',
+        icon: <LanguageRoundedIcon/>,
+        content: <WikipediaWidget/>
+    },
+    {
+        name: 'Movies',
+        icon: <TheatersRoundedIcon/>,
+        content: <MoviedbWidget/>
+    },
+    {
+        name: 'News',
+        icon: <LibraryBooksRoundedIcon/>,
+        content: <NewsWidget/>
     }
 ];
 
@@ -210,7 +231,7 @@ function Dashboard() {
     const classes = useStyles();
     const theme = useTheme();
     const [openDrawer, setOpenDrawer] = React.useState(false);
-    const [userWidgets, setUserWidgets] = React.useState([{name: 'Home', widgets: []}]);
+    const [userWidgets, setUserWidgets] = React.useState([]);
     const [userDashboards, setUserDashboards] = React.useState([{name: "Home", icon: <HomeRoundedIcon/>}]);
     const [currentWidgetDisplay, setCurrentWidgetDisplay] = React.useState([]);
     const [currentDashboardDisplay, setCurrentDashboardDisplay] = React.useState([{name: 'Home', icon: <HomeRoundedIcon/>}]);

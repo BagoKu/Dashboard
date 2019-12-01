@@ -4,7 +4,6 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
-import Avatar from "@material-ui/core/Avatar";
 import Box from "@material-ui/core/Box";
 
 function YoutubeWidget() {
@@ -12,8 +11,8 @@ function YoutubeWidget() {
     const [videoData, setVideoData] = React.useState([]);
 
     const getYoutubeData = () => {
-        apis.requestYoutube("https://www.youtube.com/watch?v=xBjXBNBdU9c").then(res => {
-            console.log(res);
+        let input = document.getElementById("video-input").value;
+        apis.requestYoutube(input).then(res => {
             let tmpObj = [{
                 channel: res.data.items[0].snippet.channelTitle,
                 title: res.data.items[0].snippet.title,
@@ -27,7 +26,7 @@ function YoutubeWidget() {
     return (
         <div>
             <div>
-                <TextField id={"city-input"}/>
+                <TextField id={"video-input"}/>
                 <Button onClick={() => getYoutubeData()} >OK</Button>
             </div>
             <Divider/>
@@ -36,14 +35,11 @@ function YoutubeWidget() {
                     <div key={`video-${index}`}>
                         <Box display={'flex'} flexDirection={'row'}>
                             <div>
-                                <p>Hello</p>
-                            </div>
-                            <div>
                                 <Typography>{item.title}</Typography>
-                                <Typography>{item.channel}</Typography>
-                                <Typography>{item.views}</Typography>
-                                <Typography>{item.likes}</Typography>
-                                <Typography>{item.dislikes}</Typography>
+                                <Typography>{"Channel: " + item.channel}</Typography>
+                                <Typography>{"Views: " + item.views}</Typography>
+                                <Typography>{"Likes: " + item.likes}</Typography>
+                                <Typography>{"Dislikes: " + item.dislikes}</Typography>
                             </div>
                         </Box>
                     </div>
