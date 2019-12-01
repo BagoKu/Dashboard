@@ -30,13 +30,14 @@ function WeatherWidget() {
                 temp: res.data.main.temp,
             }];
             setData(tmpObj);
-        });
+        })
+            .catch(err => console.log(err));
     };
 
     return (
         <div>
             <div>
-                <TextField id={"city-input"}/>
+                <TextField label={"Enter city name"} id={"city-input"}/>
                 <Button onClick={() => getWeather()} >OK</Button>
             </div>
             <Divider/>

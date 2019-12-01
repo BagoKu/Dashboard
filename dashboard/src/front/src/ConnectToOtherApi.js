@@ -26,7 +26,6 @@ async function requestYoutube(_urlVideo) {
         },
         method: 'GET'
     });
-    console.log(ret);
     return(ret);
 }
 
@@ -40,7 +39,6 @@ async function requestTwitch(username) {
            user_login: username
         }
     });
-    console.log(ret);
     return(ret);
 }
 
@@ -59,7 +57,6 @@ async function requestMoviedb(movieTitle) {
         },
         method: 'GET'
     });
-
     return(ret);
 }
 

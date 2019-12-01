@@ -20,13 +20,14 @@ function YoutubeWidget() {
                 likes: res.data.items[0].statistics.likeCount,
                 dislikes: res.data.items[0].statistics.dislikeCount}];
             setVideoData(tmpObj);
-        });
+        })
+            .catch(err => {console.log(err)});
     };
 
     return (
         <div>
             <div>
-                <TextField id={"video-input"}/>
+                <TextField label={"Enter video URL"} id={"video-input"}/>
                 <Button onClick={() => getYoutubeData()} >OK</Button>
             </div>
             <Divider/>
