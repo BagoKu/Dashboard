@@ -203,7 +203,7 @@ function Dashboard() {
     const [userWidgets, setUserWidgets] = React.useState([]);
     const [userDashboards, setUserDashboards] = React.useState([]);
     const [currentWidgetDisplay, setCurrentWidgetDisplay] = React.useState([]);
-    const [currentDashboardDisplay, setCurrentDashboardDisplay] = React.useState({name: 'Home', icon: <HomeRoundedIcon/>});
+    const [currentDashboardDisplay, setCurrentDashboardDisplay] = React.useState([{name: 'Home', icon: <HomeRoundedIcon/>}]);
 
     const handleDrawerOpen = () => {
         setOpenDrawer(true);
@@ -234,8 +234,12 @@ function Dashboard() {
                     >
                         <MenuRoundedIcon/>
                     </IconButton>
-                    <Typography>{currentDashboardDisplay.name}</Typography>
-                    {currentDashboardDisplay.icon}
+                    {currentDashboardDisplay.map((item, index) => (
+                        <div key={`name-${index}`}>
+                            <Typography>{item.name}</Typography>
+                            {item.icon}
+                        </div>
+                    ))}
                 </Toolbar>
             </AppBar>
             <Drawer
