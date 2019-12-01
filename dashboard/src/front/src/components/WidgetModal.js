@@ -106,7 +106,7 @@ function WidgetModal(props) {
         tmpObject.widgets.push(widgetToAdd);
         tmpArray[index] = tmpObject;
         props.setWidgets(tmpArray);
-        user.addWidget(Cookies.get('_email'), dashboard, widgetToAdd, 'jcpencore');
+        user.addWidget(Cookies.get('_email'), dashboard, widgetToAdd, 'Work in progress');
     };
 
     const addUserWidget = (dashboardName, widgetToAdd) => {
