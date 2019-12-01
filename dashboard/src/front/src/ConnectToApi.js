@@ -129,6 +129,11 @@ async function findUser(_email, _password) {
     return(response);
 }
 
+async function getBDD() {
+    const response = await axios.get(`http://localhost:` + port);
+    return(response);
+}
+
 async function loadDashboards(_email, _password) {
     const response = await axios.get(`http://localhost:` + port)
         .then(res => {
@@ -175,7 +180,7 @@ function deleteData(_email, _dashName, _type) {
 }
 
 const user = {
-    addUser, findUser, addDashboard, addWidget, loadDashboards, deleteData
+    addUser, findUser, addDashboard, addWidget, loadDashboards, deleteData, getBDD
 };
 
 export default user;
