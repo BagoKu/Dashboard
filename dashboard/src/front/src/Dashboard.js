@@ -25,6 +25,8 @@ import WbSunnyRoundedIcon from "@material-ui/icons/WbSunnyRounded";
 import TextField from "@material-ui/core/TextField";
 import PlayCircleOutlineRoundedIcon from "@material-ui/icons/PlayCircleOutlineRounded";
 import LiveTvRoundedIcon from "@material-ui/icons/LiveTvRounded";
+import WeatherWidget from "./components/WeatherWidget";
+import YoutubeWidget from "./components/YoutubeWidget";
 
 const drawerWidth = 240;
 
@@ -129,12 +131,12 @@ const widgets = [
     {
         name: 'Weather',
         icon: <WbSunnyRoundedIcon/>,
-        content: <TextField/>
+        content: <WeatherWidget/>
     },
     {
         name: 'Youtube',
         icon: <PlayCircleOutlineRoundedIcon/>,
-        content: <TextField/>
+        content: <YoutubeWidget/>
     },
     {
         name: 'Twitch',
@@ -258,6 +260,7 @@ function Dashboard() {
                 </div>
 
                 <DashboardList
+                    customWidgets={widgets}
                     dashboards={userDashboards} setDashboards={setUserDashboards}
                     widgets={userWidgets} setWidgets={setUserWidgets}
                     currentDashboards={currentDashboardDisplay} setCurrentDashboards={setCurrentDashboardDisplay}
@@ -273,6 +276,7 @@ function Dashboard() {
                 widgets={currentWidgetDisplay} setWidgets={setCurrentWidgetDisplay}
             />
             <WidgetModal
+                customWidgets={widgets}
                 widgets={userWidgets} setWidgets={setUserWidgets}
                 currentDashboards={currentDashboardDisplay} setCurrentDashboards={setCurrentDashboardDisplay}
                 currentWidgets={currentWidgetDisplay} setCurrentWidgets={setCurrentWidgetDisplay}

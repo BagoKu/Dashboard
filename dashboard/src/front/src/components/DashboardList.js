@@ -6,31 +6,8 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import IconButton from "@material-ui/core/IconButton";
 import RemoveIcon from "@material-ui/icons/Remove";
-import WbSunnyRoundedIcon from "@material-ui/icons/WbSunnyRounded";
-import TextField from "@material-ui/core/TextField";
-import PlayCircleOutlineRoundedIcon from "@material-ui/icons/PlayCircleOutlineRounded";
-import LiveTvRoundedIcon from "@material-ui/icons/LiveTvRounded";
 import Cookies from "js-cookie";
 import user from "../ConnectToApi";
-
-
-const widgets = [
-    {
-        name: 'Weather',
-        icon: <WbSunnyRoundedIcon/>,
-        content: <TextField/>
-    },
-    {
-        name: 'Youtube',
-        icon: <PlayCircleOutlineRoundedIcon/>,
-        content: <TextField/>
-    },
-    {
-        name: 'Twitch',
-        icon: <LiveTvRoundedIcon/>,
-        content: <TextField/>
-    }
-];
 
 function DashboardList(props) {
 
@@ -44,9 +21,9 @@ function DashboardList(props) {
         let tmpArr = [];
 
         for (let i = 0; i < widgetsToDisplay.length; i++) {
-            for (let j = 0; j < widgets.length; j++) {
-                if (widgetsToDisplay[i] === widgets[j].name) {
-                    tmpArr.push({name: widgets[j].name, icon: widgets[j].icon, content: widgets[j].content});
+            for (let j = 0; j < props.customWidgets.length; j++) {
+                if (widgetsToDisplay[i] === props.customWidgets[j].name) {
+                    tmpArr.push({name: props.customWidgets[j].name, icon: props.customWidgets[j].icon, content: props.customWidgets[j].content});
                 }
             }
         }
@@ -82,6 +59,8 @@ function DashboardList(props) {
                 break;
             }
         }
+        handleCurrentDashboardName(props.dashboards[0].name, props.dashboards[0].icon);
+        handleCurrentWidgetsToDisplay(props.widgets[0].widgets);
         user.deleteData(Cookies.get('_email'), dashboardName, "dashboard");
     };
 
